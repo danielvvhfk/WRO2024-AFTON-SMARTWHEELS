@@ -18,7 +18,7 @@ set(HEAD_HASH)
 file(READ "/Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/build/CMakeFiles/git-data/HEAD" HEAD_CONTENTS LIMIT 1024)
 
 string(STRIP "${HEAD_CONTENTS}" HEAD_CONTENTS)
-set(GIT_DIR "/Users/danieldenis/esp/esp-idf/.git")
+set(GIT_DIR "/Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/.git")
 # handle git-worktree
 if(EXISTS "${GIT_DIR}/commondir")
 	file(READ "${GIT_DIR}/commondir" GIT_DIR_NEW LIMIT 1024)
