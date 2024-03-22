@@ -9,9 +9,11 @@
     "idf.espIdfPath": "/Users/danieldenis/esp/esp-idf",
     "idf.openOcdConfigs": [
         "interface/ftdi/esp32_devkitj_v1.cfg",
-        "target/esp32.cfg"
+        "target/esp32s3.cfg"
     ],
-    "idf.port": "/dev/cu.BLTH",
+    "idf.port": "/dev/cu.usbserial-14130",
     "idf.pythonBinPath": "/Users/danieldenis/.espressif/python_env/idf5.2_py3.10_env/bin/python",
-    "idf.toolsPath": "/Users/danieldenis/.espressif"
+    "idf.toolsPath": "/Users/danieldenis/.espressif",
+    "idf.flashType": "UART",
+    "python.pythonPath": "$HOME/.espressif/python_env/idf5.2_py3.10_env/bin/python"
 }
