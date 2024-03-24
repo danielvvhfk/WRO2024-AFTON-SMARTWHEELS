@@ -15,5 +15,8 @@
     "idf.pythonBinPath": "/Users/danieldenis/.espressif/python_env/idf5.2_py3.10_env/bin/python",
     "idf.toolsPath": "/Users/danieldenis/.espressif",
     "idf.flashType": "UART",
-    "python.pythonPath": "$HOME/.espressif/python_env/idf5.2_py3.10_env/bin/python"
+    "python.pythonPath": "$HOME/.espressif/python_env/idf5.2_py3.10_env/bin/python",
+    "files.associations": {
+        "esp_http_server.h": "c"
+    }
 }
