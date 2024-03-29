@@ -43,7 +43,8 @@
 
 #define WIFI_SSID "SSID1-9980"
 #define WIFI_PASS "admin9980"
-#define SERVER_URI "http://192.168.1.2:5000/upload"
+
+#include "image_sender.h"
 
 
 
@@ -145,6 +146,7 @@ static void event_handler(void* arg, esp_event_base_t event_base, int32_t event_
 void wifi_init_sta()
 {
 	s_wifi_event_group = xEventGroupCreate();
+    esp_log_level_set("wifi", ESP_LOG_VERBOSE);
 
 	ESP_LOGI(TAG,"ESP-IDF esp_netif");
 	ESP_ERROR_CHECK(esp_netif_init());
@@ -337,7 +339,8 @@ void app_main(void)
 	start_webserver();
 
    
-
+    // Assuming you receive a command to capture and send an image
+    send_image_to_server("/spiffs/capture.jpeg");
     // while (1) {
     //     ESP_LOGI(TAG, "Turning the LED %s!", s_led_state == true ? "ON" : "OFF");
     //     blink_led();
