@@ -59,6 +59,7 @@ static esp_err_t get_handler(httpd_req_t *req)
 			return ESP_ERR_NO_MEM;
 		}
 		ws_pkt.payload = buf;
+		
 		/* Set max_len = ws_pkt.len to get the frame payload */
 		ret = httpd_ws_recv_frame(req, &ws_pkt, ws_pkt.len);
 		if (ret != ESP_OK) {
@@ -67,18 +68,21 @@ static esp_err_t get_handler(httpd_req_t *req)
 			return ret;
 		}
 		ESP_LOGI(TAG, "Got packet with message: [%.*s]", ws_pkt.len, ws_pkt.payload);
-		free(buf);
+		// free(buf);
 	}
+	// Immediately after receiving the WebSocket message:
+	char* receivedMsg = strndup((char*)buf, ws_pkt.len);
+
 
 	ESP_LOGI(TAG, "Packet final: %d", ws_pkt.final);
 	ESP_LOGI(TAG, "Packet fragmented: %d", ws_pkt.fragmented);
 	ESP_LOGI(TAG, "Packet type: %d", ws_pkt.type);
 
 	 // Log the received message
-    ESP_LOGI(TAG, "Got packet with message: [%.*s]", ws_pkt.len, ws_pkt.payload);
+    ESP_LOGI(TAG, "Got packet with message2: [%.*s]", ws_pkt.len,receivedMsg);
 
-    if (strncmp((char*)ws_pkt.payload, "capture", ws_pkt.len) == 0 || strncmp((char*)ws_pkt.payload, "reportapi", ws_pkt.len) == 0) {
-        	char imageFileName[256];
+    if (strncmp(receivedMsg, "capture", ws_pkt.len) == 0 || strncmp(receivedMsg, "reportapi", ws_pkt.len) == 0) {
+    	char imageFileName[256];
 		//strcpy(imageFileName, "/spiffs/esp32.jpeg");
 		strcpy(imageFileName, "/spiffs/capture.jpeg");
 
@@ -154,6 +158,7 @@ static esp_err_t get_handler(httpd_req_t *req)
 		}
 			
 		// Send by WebSocket
+		ESP_LOGI(TAG, "Sendby WebSocket");
 		ws_pkt.payload = base64_buffer;
 		ws_pkt.len = base64Size;
 		ret = httpd_ws_send_frame(req, &ws_pkt);
@@ -162,8 +167,10 @@ static esp_err_t get_handler(httpd_req_t *req)
 		}
 		free(base64_buffer);
 
+		 ESP_LOGI(TAG, "Got packet with message3: [%.*s]", ws_pkt.len, receivedMsg);
 
-        if (strncmp((char*)ws_pkt.payload, "reportapi", ws_pkt.len) == 0) {
+        if (strncmp(receivedMsg, "reportapi", ws_pkt.len) == 0) {
+			ESP_LOGI(TAG, "Send the image to the API");
             // Send the image to the API
             // The function send_image_to_server could be declared in another source file
             // Here you pass the path to the image saved in SPIFFS
@@ -171,6 +178,8 @@ static esp_err_t get_handler(httpd_req_t *req)
         }
     }
 
+	free(receivedMsg);
+	free(buf);
 	return ret;
 }
 
