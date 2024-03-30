@@ -8,6 +8,7 @@
     </div>
     <div id="take">
       <input type="button" value="take picture" onclick="on_take_picture();">
+      <input type="button" value="report to API" onclick="on_report_api();"> <!-- New button -->
     </div>
     <div id="fail">
       Server connection fail.
@@ -46,6 +47,12 @@
     function on_take_picture()
     {
       var text_input = "capture";
+      web_socket.send(text_input);
+    }
+
+    function on_report_api()
+    {
+      var text_input = "reportapi";
       web_socket.send(text_input);
     }
 
