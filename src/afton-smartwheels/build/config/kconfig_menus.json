@@ -29371,6 +29371,16 @@
                     {
                         "children": [],
                         "depends_on": null,
+                        "help": "Enable for the console cli to be available on the device.",
+                        "id": "MDNS_ENABLE_CONSOLE_CLI",
+                        "name": "MDNS_ENABLE_CONSOLE_CLI",
+                        "range": null,
+                        "title": "Enable Command Line Interface on device console",
+                        "type": "bool"
+                    },
+                    {
+                        "children": [],
+                        "depends_on": null,
                         "help": "Enables support for IPv4 reverse lookup. If enabled, the mDNS library\nresponse to PTR queries of \"A.B.C.D.in-addr.arpa\" type.",
                         "id": "MDNS_RESPOND_REVERSE_QUERIES",
                         "name": "MDNS_RESPOND_REVERSE_QUERIES",

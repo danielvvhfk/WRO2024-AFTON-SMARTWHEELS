@@ -1,7 +1,7 @@
 {
     "version":            "1.1",
     "project_name":       "afton-smartwheels",
-    "project_version":    "281f5c3-dirty",
+    "project_version":    "c06e0e5-dirty",
     "project_path":       "/Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels",
     "idf_path":           "/Users/danieldenis/esp/esp-idf",
     "build_dir":          "/Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/build",

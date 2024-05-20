@@ -41,8 +41,8 @@
 #include "esp_camera.h"
 #include "camera_pin.h"
 
-#define WIFI_SSID "SSID1-9980"
-#define WIFI_PASS "admin9980"
+#define WIFI_SSID "DENIS2.6"
+#define WIFI_PASS "0sc@rddx3anc1"
 
 #include "image_sender.h"
 
@@ -58,6 +58,9 @@ static const char *TAG = "afton-smartwheels";
 
 static uint8_t s_led_state = 0;
 
+#define MOTOR_ENABLE_PIN GPIO_NUM_42
+#define MOTOR_IN3_PIN GPIO_NUM_45
+#define MOTOR_IN4_PIN GPIO_NUM_46
 
 static void blink_led(void)
 {
@@ -298,6 +301,16 @@ esp_err_t start_webserver(void);
 
 void app_main(void)
 {
+
+	gpio_config_t io_conf;
+
+    // Configure GPIOs for motor control
+    io_conf.intr_type = GPIO_INTR_DISABLE;
+    io_conf.mode = GPIO_MODE_OUTPUT;
+    io_conf.pin_bit_mask = (1ULL << MOTOR_ENABLE_PIN) | (1ULL << MOTOR_IN3_PIN) | (1ULL << MOTOR_IN4_PIN);
+    io_conf.pull_down_en = GPIO_PULLDOWN_DISABLE;
+    io_conf.pull_up_en = GPIO_PULLUP_DISABLE;
+    gpio_config(&io_conf);
 
     /* Configure the peripheral according to the LED type */
     configure_led();

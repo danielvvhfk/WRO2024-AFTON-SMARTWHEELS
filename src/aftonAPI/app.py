@@ -32,4 +32,4 @@ def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ['jpg']
 
 if __name__ == '__main__':
-    app.run(host='192.168.1.2', port=5000, debug=True)
+    app.run(host='192.168.1.100', port=5000, debug=True)
