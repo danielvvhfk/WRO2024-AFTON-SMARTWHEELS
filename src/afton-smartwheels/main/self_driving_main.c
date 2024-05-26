@@ -45,6 +45,7 @@
 #define WIFI_PASS "0sc@rddx3anc1"
 
 #include "image_sender.h"
+#include "laser_sensor.h"
 
 
 
@@ -354,6 +355,36 @@ void app_main(void)
    
     // Assuming you receive a command to capture and send an image
     send_image_to_server("/spiffs/capture.jpeg");
+
+	 esp_err_t ret;
+    uint16_t distance;
+
+    ret = laser_sensor_init();
+    if (ret != ESP_OK) {
+        ESP_LOGE(TAG, "Failed to initialize laser sensor");
+        return;
+    }
+
+    ret = laser_sensor_start_ranging();
+    if (ret != ESP_OK) {
+        ESP_LOGE(TAG, "Failed to start ranging");
+        return;
+    }
+
+	while (1) {
+        ret = laser_sensor_get_distance(&distance);
+        if (ret == ESP_OK) {
+            ESP_LOGI(TAG, "Distance: %d mm", distance);
+        } else {
+            ESP_LOGE(TAG, "Failed to get distance");
+        }
+        vTaskDelay(1000 / portTICK_PERIOD_MS);  // Delay 1 second
+    }
+
+    ret = laser_sensor_stop_ranging();
+    if (ret != ESP_OK) {
+        ESP_LOGE(TAG, "Failed to stop ranging");
+    }
     // while (1) {
     //     ESP_LOGI(TAG, "Turning the LED %s!", s_led_state == true ? "ON" : "OFF");
     //     blink_led();

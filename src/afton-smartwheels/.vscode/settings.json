@@ -11,7 +11,7 @@
         "interface/ftdi/esp32_devkitj_v1.cfg",
         "target/esp32s3.cfg"
     ],
-    "idf.port": "/dev/cu.usbserial-14130",
+    "idf.port": "/dev/cu.usbserial-14120",
     "idf.pythonBinPath": "/Users/danieldenis/.espressif/python_env/idf5.2_py3.10_env/bin/python",
     "idf.toolsPath": "/Users/danieldenis/.espressif",
     "idf.flashType": "UART",

@@ -1,7 +1,7 @@
 {
     "version":            "1.1",
     "project_name":       "afton-smartwheels",
-    "project_version":    "c06e0e5-dirty",
+    "project_version":    "accb79c-dirty",
     "project_path":       "/Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels",
     "idf_path":           "/Users/danieldenis/esp/esp-idf",
     "build_dir":          "/Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/build",
@@ -1180,7 +1180,7 @@
             "managed_reqs": [],
             "managed_priv_reqs": [ "espressif__esp32-camera", "espressif__led_strip", "espressif__mdns" ],
             "file": "/Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/build/esp-idf/main/libmain.a",
-            "sources": [ "/Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/main/self_driving_main.c", "/Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/main/webserver.c", "/Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/main/image_sender.c", "/Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/main/camera_capture.c" ],
+            "sources": [ "/Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/main/VL53L4CD_api.c", "/Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/main/laser_sensor.c", "/Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/main/self_driving_main.c", "/Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/main/webserver.c", "/Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/main/image_sender.c", "/Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/main/camera_capture.c" ],
             "include_dirs": [ "." ]
         },
         "mbedtls": {
