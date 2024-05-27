@@ -2,7 +2,7 @@
 #include "driver/ledc.h"
 #include "esp_log.h"
 
-static const char *TAG = "SERVO";
+static const char *TAG = "SERVODRV";
 
 #define SERVO_MIN_PULSEWIDTH_US 1000  // Minimum pulse width in microseconds
 #define SERVO_MAX_PULSEWIDTH_US 2000  // Maximum pulse width in microseconds
