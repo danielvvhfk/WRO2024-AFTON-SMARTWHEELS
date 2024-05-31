@@ -1,5 +1,6 @@
 #include "servo_drv.h"
 #include "driver/ledc.h"
+#include "esp_err.h"
 #include "esp_log.h"
 
 static const char *TAG = "SERVODRV";
@@ -11,9 +12,9 @@ static const char *TAG = "SERVODRV";
 esp_err_t servo_driver_init(void) {
     // Prepare and then apply the LEDC PWM timer configuration
     ledc_timer_config_t ledc_timer = {
-        .speed_mode       = LEDC_HIGH_SPEED_MODE,
+        .speed_mode       = LEDC_LOW_SPEED_MODE, // Use low-speed mode for ESP32-S3
         .timer_num        = LEDC_TIMER_0,
-        .duty_resolution  = LEDC_TIMER_16_BIT,
+        .duty_resolution  = LEDC_TIMER_14_BIT,
         .freq_hz          = 50,  // Frequency in Hertz (50Hz for servos)
         .clk_cfg          = LEDC_AUTO_CLK
     };
@@ -21,7 +22,7 @@ esp_err_t servo_driver_init(void) {
 
     // Prepare and then apply the LEDC PWM channel configuration
     ledc_channel_config_t ledc_channel = {
-        .speed_mode     = LEDC_HIGH_SPEED_MODE,
+        .speed_mode     = LEDC_LOW_SPEED_MODE, // Use low-speed mode for ESP32-S3
         .channel        = LEDC_CHANNEL_0,
         .timer_sel      = LEDC_TIMER_0,
         .intr_type      = LEDC_INTR_DISABLE,
@@ -45,11 +46,11 @@ esp_err_t set_servo_angle(float angle) {
                              ((SERVO_MAX_PULSEWIDTH_US - SERVO_MIN_PULSEWIDTH_US) * angle) / SERVO_MAX_DEGREE;
 
     // Calculate the duty cycle value
-    uint32_t duty = (pulsewidth_us * (1 << LEDC_TIMER_16_BIT)) / 20000;  // 20ms period (50Hz)
+    uint32_t duty = (pulsewidth_us * (1 << LEDC_TIMER_14_BIT)) / 20000;  // 20ms period (50Hz)
 
     // Set the duty cycle
-    ESP_ERROR_CHECK(ledc_set_duty(LEDC_HIGH_SPEED_MODE, LEDC_CHANNEL_0, duty));
-    ESP_ERROR_CHECK(ledc_update_duty(LEDC_HIGH_SPEED_MODE, LEDC_CHANNEL_0));
+    ESP_ERROR_CHECK(ledc_set_duty(LEDC_LOW_SPEED_MODE, LEDC_CHANNEL_0, duty));
+    ESP_ERROR_CHECK(ledc_update_duty(LEDC_LOW_SPEED_MODE, LEDC_CHANNEL_0));
 
     return ESP_OK;
 }

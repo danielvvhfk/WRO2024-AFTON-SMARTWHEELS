@@ -356,7 +356,7 @@ void app_main(void)
     // Assuming you receive a command to capture and send an image
     send_image_to_server("/spiffs/capture.jpeg");
 
-	 esp_err_t ret;
+	// esp_err_t ret= ESP_OK;
     uint16_t distance;
 
     ret = laser_sensor_init();

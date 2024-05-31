@@ -17,6 +17,9 @@
     "idf.flashType": "UART",
     "python.pythonPath": "$HOME/.espressif/python_env/idf5.2_py3.10_env/bin/python",
     "files.associations": {
-        "esp_http_server.h": "c"
+        "esp_http_server.h": "c",
+        "ledc.h": "c",
+        "ledc_types.h": "c",
+        "vl53l4cd_api.h": "c"
     }
 }
