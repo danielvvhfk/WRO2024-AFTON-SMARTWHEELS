@@ -48,6 +48,11 @@
 #include "laser_sensor.h"
 
 
+#include "servo_drv.h"  // Include the servo driver header
+
+#define SERVO_TEST_TASK_STACK_SIZE 2048
+#define SERVO_TEST_TASK_PRIORITY 5
+
 
 static const char *TAG = "afton-smartwheels";
 
@@ -299,6 +304,35 @@ static void printSPIFFS(char * path) {
 esp_err_t start_webserver(void);
 
 
+void servo_test_task(void *arg) {
+    // Initialize the servo driver
+    esp_err_t ret = servo_driver_init();
+    if (ret != ESP_OK) {
+        ESP_LOGE(TAG, "Failed to initialize servo driver");
+        vTaskDelete(NULL);
+    }
+
+    // Gradually increase the servo angle
+    ESP_LOGI(TAG, "Starting servo test: Increasing angle");
+    for (float angle = 0; angle <= SERVO_MAX_DEGREE; angle += 10) {
+        ESP_LOGI(TAG, "Setting servo angle to %.2f", angle);
+        set_servo_angle(angle);
+        vTaskDelay(pdMS_TO_TICKS(500));  // Delay for 500ms
+    }
+
+    // Gradually decrease the servo angle
+    ESP_LOGI(TAG, "Starting servo test: Decreasing angle");
+    for (float angle = SERVO_MAX_DEGREE; angle >= 0; angle -= 10) {
+        ESP_LOGI(TAG, "Setting servo angle to %.2f", angle);
+        set_servo_angle(angle);
+        vTaskDelay(pdMS_TO_TICKS(500));  // Delay for 500ms
+    }
+
+    // Task complete
+    ESP_LOGI(TAG, "Servo test completed");
+    vTaskDelete(NULL);  // Delete the task after completion
+}
+
 
 void app_main(void)
 {
@@ -352,6 +386,16 @@ void app_main(void)
 	/* Start the server */
 	start_webserver();
 
+	 // Initialize the servo driver
+    ret = servo_driver_init();
+    if (ret != ESP_OK) {
+        ESP_LOGE(TAG, "Failed to initialize servo driver");
+    }
+
+	// Create a task to test the servo
+    // xTaskCreate(servo_test_task, "servo_test_task", SERVO_TEST_TASK_STACK_SIZE, NULL, SERVO_TEST_TASK_PRIORITY, NULL);
+   
+
    
     // Assuming you receive a command to capture and send an image
     send_image_to_server("/spiffs/capture.jpeg");
@@ -359,33 +403,34 @@ void app_main(void)
 	// esp_err_t ret= ESP_OK;
     uint16_t distance;
 
-    ret = laser_sensor_init();
-    if (ret != ESP_OK) {
-        ESP_LOGE(TAG, "Failed to initialize laser sensor");
-        return;
-    }
+    // ret = laser_sensor_init();
+    // if (ret != ESP_OK) {
+    //     ESP_LOGE(TAG, "Failed to initialize laser sensor");
+    //     return;
+    // }
 
-    ret = laser_sensor_start_ranging();
-    if (ret != ESP_OK) {
-        ESP_LOGE(TAG, "Failed to start ranging");
-        return;
-    }
+    // ret = laser_sensor_start_ranging();
+    // if (ret != ESP_OK) {
+    //     ESP_LOGE(TAG, "Failed to start ranging");
+    //     return;
+    // }
 
-	while (1) {
-        ret = laser_sensor_get_distance(&distance);
-        if (ret == ESP_OK) {
-            ESP_LOGI(TAG, "Distance: %d mm", distance);
-        } else {
-            ESP_LOGE(TAG, "Failed to get distance");
-        }
-        vTaskDelay(1000 / portTICK_PERIOD_MS);  // Delay 1 second
-    }
+	// while (1) {
+    //     ret = laser_sensor_get_distance(&distance);
+    //     if (ret == ESP_OK) {
+    //         ESP_LOGI(TAG, "Distance: %d mm", distance);
+    //     } else {
+    //         ESP_LOGE(TAG, "Failed to get distance");
+    //     }
+    //     vTaskDelay(1000 / portTICK_PERIOD_MS);  // Delay 1 second
+    // }
 
-    ret = laser_sensor_stop_ranging();
-    if (ret != ESP_OK) {
-        ESP_LOGE(TAG, "Failed to stop ranging");
-    }
-    // while (1) {
+    // ret = laser_sensor_stop_ranging();
+    // if (ret != ESP_OK) {
+    //     ESP_LOGE(TAG, "Failed to stop ranging");
+    // }
+
+	 // while (1) {
     //     ESP_LOGI(TAG, "Turning the LED %s!", s_led_state == true ? "ON" : "OFF");
     //     blink_led();
     //     /* Toggle the LED state */

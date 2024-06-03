@@ -30,6 +30,8 @@ esp_err_t camera_capture(char * FileName, size_t *pictureSize)
 	for(int i=0;i<1;i++) {
 		camera_fb_t * fb = esp_camera_fb_get();
 		ESP_LOGI(TAG, "fb->len=%d", fb->len);
+		ESP_LOGI(TAG, "fb->height=%d", fb->height);
+		ESP_LOGI(TAG, "fb->width=%d", fb->width);
 		esp_camera_fb_return(fb);
 	}
 
@@ -57,6 +59,75 @@ esp_err_t camera_capture(char * FileName, size_t *pictureSize)
 
 	return ESP_OK;
 }
+
+
+// esp_err_t camera_capture(const char *imageFileName, size_t *out_size) {
+//     //clear internal queue
+// 	//for(int i=0;i<2;i++) {
+// 	for(int i=0;i<1;i++) {
+// 		camera_fb_t * fb = esp_camera_fb_get();
+// 		ESP_LOGI(TAG, "fb->len=%d", fb->len);
+// 		esp_camera_fb_return(fb);
+// 	}
+
+// 	//acquire a frame
+// 	camera_fb_t * fb = esp_camera_fb_get();
+// 	if (!fb) {
+// 		ESP_LOGE(TAG, "Camera Capture Failed");
+// 		return ESP_FAIL;
+// 	}
+
+
+//     // Original dimensions
+//     int original_width = fb->width;
+//     int original_height = fb->height;
+
+//     // Crop dimensions
+//     int crop_width = 640;
+//     int crop_height = 280;
+
+//     // Calculate starting point for cropping (focus on lower part of the image)
+//     int start_x = (original_width - crop_width) / 2;
+//     int start_y = original_height - crop_height;
+
+//     // Allocate buffer for cropped image
+//     size_t cropped_size = crop_width * crop_height * 3; // Assuming RGB888 format
+//     uint8_t *cropped_buf = (uint8_t *)malloc(cropped_size);
+//     if (!cropped_buf) {
+//         ESP_LOGE(TAG, "Failed to allocate memory for cropped image");
+//         esp_camera_fb_return(fb);
+//         return ESP_ERR_NO_MEM;
+//     }
+
+//     // Crop the image
+//     for (int y = 0; y < crop_height; y++) {
+//         for (int x = 0; x < crop_width; x++) {
+//             int orig_index = ((start_y + y) * original_width + (start_x + x)) * 3;
+//             int crop_index = (y * crop_width + x) * 3;
+//             cropped_buf[crop_index] = fb->buf[orig_index];
+//             cropped_buf[crop_index + 1] = fb->buf[orig_index + 1];
+//             cropped_buf[crop_index + 2] = fb->buf[orig_index + 2];
+//         }
+//     }
+
+//     // Save or process cropped image
+//     // Example: Save cropped image to a file
+//     FILE *file = fopen(imageFileName, "wb");
+//     if (!file) {
+//         ESP_LOGE(TAG, "Failed to open file for writing");
+//         free(cropped_buf);
+//         esp_camera_fb_return(fb);
+//         return ESP_FAIL;
+//     }
+//     fwrite(cropped_buf, 1, cropped_size, file);
+//     fclose(file);
+
+//     // Clean up
+//     *out_size = cropped_size;
+//     free(cropped_buf);
+//     esp_camera_fb_return(fb);
+//     return ESP_OK;
+// }
 
 // Calculate the size after conversion to base64
 // http://akabanessa.blog73.fc2.com/blog-entry-83.html

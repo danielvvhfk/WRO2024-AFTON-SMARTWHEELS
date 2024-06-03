@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 <head>
   <style>
@@ -5,6 +6,14 @@
       font-size: 24px;
       width: 50px;
       height: 50px;
+    }
+    #error-message {
+      color: red;
+      display: none;
+    }
+    .input-field {
+      font-size: 24px;
+      width: 100px;
     }
   </style>
 </head>
@@ -14,28 +23,38 @@
     <input type="text" id="connect_input" name="connect_input" value="192.168.1.100">
   </div>
   <div id="controls" style="display:none;">
-    <input type="button" class="control-button" value="↑" onclick="send_move_command('MOV_FWD');">
-    <input type="button" class="control-button" value="⏸" onclick="send_move_command('MOV_STOP');">
-    <input type="button" class="control-button" value="↓" onclick="send_move_command('MOV_BACK');">
+    <input type="button" class="control-button" value="&uarr;" onclick="send_move_command('MOV_FWD');">
+    <input type="button" class="control-button" value="&#x23F8;" onclick="send_move_command('MOV_STOP');">
+    <input type="button" class="control-button" value="&darr;" onclick="send_move_command('MOV_BACK');">
+
+   
+    <input type="text" id="steering_value" class="input-field" placeholder="Steering">
+    <input type="button" value="send steering" onclick="send_steering();">
   </div>
   <div id="take">
     <input type="button" value="take picture" onclick="on_take_picture();">
     <input type="button" value="report to API" onclick="on_report_api();">
   </div>
-  <div id="fail">
+  <div id="fail" style="display:none;">
     Server connection fail.
   </div>
+  <div id="error-message"></div>
   <div>
     <canvas id="canvas_image" width="640" height="480"></canvas>
   </div>
 
   <script>
     var web_socket = null;
+    var reconnectInterval = 100; // Reconnect every 1 second
+    var reconnectAttempts = 0;
+    var maxReconnectAttempts = 10;
+
 
     function on_load() {
       document.getElementById('take').style.display = 'none';
       document.getElementById('fail').style.display = 'none';
       document.getElementById('controls').style.display = 'none';
+      document.getElementById('error-message').style.display = 'none';
     }
 
     function on_connect_server() {
@@ -43,51 +62,142 @@
       var connection = "ws://" + text.value + ":80/ws";
       web_socket = new WebSocket(connection);
       web_socket.binaryType = 'arraybuffer';
+      web_socket.onopen = function() {
+        console.log("WebSocket connection opened");
+        document.getElementById('take').style.display = 'inline';
+        document.getElementById('controls').style.display = 'inline';
+        document.getElementById('connect').style.display = 'none';
+        document.getElementById('error-message').style.display = 'none';
+        reconnectAttempts = 0; // Reset reconnect attempts on successful connection
+      
+      };
       web_socket.onmessage = on_message;
       web_socket.onerror = on_error;
-      document.getElementById('take').style.display = 'inline';
-      document.getElementById('controls').style.display = 'inline';
-      document.getElementById('connect').style.display = 'none';
+      // web_socket.onclose = on_close;
     }
 
     function send_move_command(command) {
+      cmd = command; // Set the local variable cmd before sending the command
+
       var message = {
         command: command,
         steering: 0, // You can set these values dynamically if needed
         speed: 0
       };
+      console.log("Sending command: ", message);
       web_socket.send(JSON.stringify(message));
     }
 
+    function send_steering_command(command,pos) {
+      cmd = command; // Set the local variable cmd before sending the command
+
+      var message = {
+        command: command,
+        steering: pos, // You can set these values dynamically if needed
+        speed: 0
+      };
+      console.log("Sending command: ", message);
+      web_socket.send(JSON.stringify(message));
+    }
+
+    function send_steering() {
+      var pos = parseInt(document.getElementById('steering_value').value);
+      if (!isNaN(pos)) {
+        send_steering_command('SW', pos);
+      } else {
+        console.error("Invalid steering value");
+      }
+    }
+
+
     function on_take_picture() {
+      cmd = "TAKE_IMG";
       var message = {
         command: "TAKE_IMG"
       };
+      console.log("Sending command: ", message);
       web_socket.send(JSON.stringify(message));
     }
 
     function on_report_api() {
+      cmd = "SEND_IMG";
       var message = {
         command: "SEND_IMG"
       };
+      console.log("Sending command: ", message);
       web_socket.send(JSON.stringify(message));
     }
 
-    function on_error(recv_data) {
+    function on_error(event) {
+      console.error("WebSocket error: ", event);
+      // document.getElementById('take').style.display = 'none';
+      // document.getElementById('controls').style.display = 'none';
+      // document.getElementById('fail').style.display = 'inline';
+      // display_error("WebSocket error: " + event.message);
+      display_error("WebSocket error: " + event.message);
+      reconnect_websocket();
+    }
+
+    function on_close(event) {
+      console.log("WebSocket connection closed: ", event);
       document.getElementById('take').style.display = 'none';
       document.getElementById('controls').style.display = 'none';
       document.getElementById('fail').style.display = 'inline';
+      display_error("WebSocket connection closed: Code " + event.code + " Reason: " + event.reason);
     }
 
-    function on_message(recv_data) {
-      var recv_image_data = new Uint8Array(recv_data.data);
-      var canvas_image = document.getElementById('canvas_image');
-      var ctx = canvas_image.getContext('2d');
-      var image = new Image();
-      image.src = 'data:image/jpeg;base64,' + recv_data.data;
-      image.onload = function() {
-        ctx.drawImage(image, 0, 0);
+    function on_message(event) {
+      // console.log("Received message: ", event.data);
+      try {
+        // var message = JSON.parse(event.data);
+        // console.log("Parsed message: ", message);
+
+        if (cmd === "SEND_IMG" || cmd === "TAKE_IMG") {
+          // image_data += message.data; // Append received chunk to the image data
+
+          // // If this is the last chunk, display the image
+          // var canvas_image = document.getElementById('canvas_image');
+          // var ctx = canvas_image.getContext('2d');
+          // var image = new Image();
+          // image.src = 'data:image/jpeg;base64,' + image_data;
+          var recv_image_data = new Uint8Array(event.data);
+          var canvas_image = document.getElementById('canvas_image');
+          var ctx = canvas_image.getContext('2d');
+          var image = new Image();
+          image.src = 'data:image/jpeg;base64,' + event.data;
+          image.onload = function() {
+            ctx.drawImage(image, 0, 0);
+          };
+        } else {
+          console.log("Command executed: ", message.command);
+        }
+      } catch (e) {
+        console.error("Failed to parse message: ", e);
       }
+    }
+    function reconnect_websocket() {
+      if (reconnectAttempts < maxReconnectAttempts) {
+        setTimeout(function() {
+          console.log("Reconnecting WebSocket attempt " + reconnectAttempts);
+          on_connect_server();
+          reconnectAttempts++;
+        }, reconnectInterval);
+      } else {
+        console.error("Max reconnect attempts reached");
+        display_error("Max reconnect attempts reached. Please reload the page.");
+      }
+    }
+
+
+    function display_error(message) {
+      var errorMessage = document.getElementById('error-message');
+      errorMessage.textContent = message;
+      errorMessage.style.display = 'block';
+    }
+
+    window.onerror = function(message, source, lineno, colno, error) {
+      console.error("Global error handler: ", message, source, lineno, colno, error);
+      display_error("Global error: " + message + " at " + source + ":" + lineno + ":" + colno);
     }
   </script>
 </body>

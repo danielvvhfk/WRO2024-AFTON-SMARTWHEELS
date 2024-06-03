@@ -5,9 +5,9 @@
 
 static const char *TAG = "SERVODRV";
 
-#define SERVO_MIN_PULSEWIDTH_US 1000  // Minimum pulse width in microseconds
-#define SERVO_MAX_PULSEWIDTH_US 2000  // Maximum pulse width in microseconds
-#define SERVO_MAX_DEGREE 180          // Maximum angle in degrees
+// #define SERVO_MIN_PULSEWIDTH_US 1000  // Minimum pulse width in microseconds
+// #define SERVO_MAX_PULSEWIDTH_US 2000  // Maximum pulse width in microseconds
+// #define SERVO_MAX_DEGREE 180          // Maximum angle in degrees
 
 esp_err_t servo_driver_init(void) {
     // Prepare and then apply the LEDC PWM timer configuration
