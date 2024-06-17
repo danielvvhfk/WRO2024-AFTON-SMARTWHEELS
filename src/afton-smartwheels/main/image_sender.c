@@ -152,7 +152,7 @@ void send_image_to_server(const char* image_path)
     free(body_end);
 
     esp_http_client_config_t config = {
-        .url = "http://192.168.1.12:5000/upload",
+        .url = "http://192.168.1.3:5000/upload",
         .event_handler = _http_event_handler,
     };
     esp_http_client_handle_t client = esp_http_client_init(&config);
@@ -160,7 +160,7 @@ void send_image_to_server(const char* image_path)
     char content_type_header[128];
     sprintf(content_type_header, "multipart/form-data; boundary=%s", boundary);
 
-    esp_http_client_set_url(client, "http://192.168.1.12:5000/upload");
+    esp_http_client_set_url(client, "http://192.168.1.3:5000/upload");
     esp_http_client_set_method(client, HTTP_METHOD_POST);
     esp_http_client_set_header(client, "Content-Type", content_type_header);
     esp_http_client_set_post_field(client, multipart_body, total_size);

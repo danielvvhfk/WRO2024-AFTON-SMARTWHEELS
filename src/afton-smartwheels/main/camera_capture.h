@@ -16,6 +16,8 @@ extern "C" {
  * @return esp_err_t ESP_OK on success, ESP_FAIL on error.
  */
 esp_err_t camera_capture(char *FileName, size_t *pictureSize);
+// esp_err_t capture_image2(char *imageFileName, size_t imageFileNameSize) {
+
 
 /**
  * @brief Convert an image file to a base64 encoded string.

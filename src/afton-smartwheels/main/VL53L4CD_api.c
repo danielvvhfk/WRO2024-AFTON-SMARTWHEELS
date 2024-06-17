@@ -64,6 +64,9 @@
 #include <string.h>
 #include <math.h>
 #include "VL53L4CD_api.h"
+#include "esp_log.h"
+
+static const char *TAG = "VL53L4CD";
 
 static const uint8_t VL53L4CD_DEFAULT_CONFIGURATION[] = {
 	#ifdef VL53L4CD_I2C_FAST_MODE_PLUS
@@ -218,6 +221,8 @@ VL53L4CD_Error VL53L4CD_SensorInit(
 	uint8_t continue_loop = 1;
 	uint16_t i = 0;
 
+	ESP_LOGI(TAG, "Starting sensor initialization");
+
 	do{
 		status |= VL53L4CD_RdByte(dev,
 				VL53L4CD_FIRMWARE__SYSTEM_STATUS, &tmp);
@@ -238,14 +243,25 @@ VL53L4CD_Error VL53L4CD_SensorInit(
 		WaitMs(dev, 1);
 	}while(continue_loop == (uint8_t)1);
 
+	ESP_LOGI(TAG, "Sensor boot status: %d", tmp);
+
+    if (status != VL53L4CD_ERROR_NONE) {
+        ESP_LOGE(TAG, "Error during sensor boot: %d", status);
+        return status;
+    }
 	/* Load default configuration */
 	for (Addr = (uint8_t)0x2D; Addr <= (uint8_t)0x87; Addr++)
 	{
 		status |= VL53L4CD_WrByte(dev, Addr,
 				VL53L4CD_DEFAULT_CONFIGURATION[
                                   Addr - (uint8_t)0x2D]);
+		if (status != VL53L4CD_ERROR_NONE) {
+            ESP_LOGE(TAG, "Error loading default configuration at Addr 0x%02X: %d", Addr, status);
+            return status;
+        }
 	}
 
+	ESP_LOGI(TAG, "Loaded default configuration");
 	/* Start VHV */
 	status |= VL53L4CD_WrByte(dev, VL53L4CD_SYSTEM_START, (uint8_t)0x40);
 	i  = (uint8_t)0;
@@ -268,6 +284,11 @@ VL53L4CD_Error VL53L4CD_SensorInit(
 		WaitMs(dev, 1);
 	}while(continue_loop == (uint8_t)1);
 
+	if (status != VL53L4CD_ERROR_NONE) {
+        ESP_LOGE(TAG, "Error during VHV start: %d", status);
+        return status;
+    }
+
 	status |= VL53L4CD_ClearInterrupt(dev);
 	status |= VL53L4CD_StopRanging(dev);
 	status |= VL53L4CD_WrByte(dev,
@@ -278,6 +299,7 @@ VL53L4CD_Error VL53L4CD_SensorInit(
 
 	status |= VL53L4CD_SetRangeTiming(dev, 50, 0);
 
+	
 	return status;
 }
 

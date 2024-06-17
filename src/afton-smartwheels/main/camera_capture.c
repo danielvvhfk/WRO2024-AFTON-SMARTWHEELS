@@ -23,6 +23,37 @@
 
 static const char *TAG = "WS_SERVER";
 
+
+// // Function to process and crop the image to 640x230
+// void process_image(uint16_t width, uint16_t height, pixformat_t format, uint8_t *buf, size_t len)
+// {
+//     // New height after cropping
+//     uint16_t new_height = 230;
+//     uint32_t new_len = width * new_height * 3; // 3 bytes per pixel for RGB
+
+//     // Allocate memory for the cropped image
+//     uint8_t *new_buf = (uint8_t *)malloc(new_len);
+//     if (!new_buf) {
+//         ESP_LOGE(TAG, "Failed to allocate memory for the cropped image");
+//         return;
+//     }
+
+//     // Copy the relevant part of the image to the new buffer
+//     uint32_t offset = width * (height - new_height) * 3; // Start from the bottom part of the image
+//     memcpy(new_buf, buf + offset, new_len);
+
+//     // Free the original buffer if necessary
+//     // free(buf);
+
+//     // Point the buffer to the new cropped image
+//     buf = new_buf;
+//     len = new_len;
+
+//     // Log the new image dimensions and length
+//     ESP_LOGI(TAG, "Cropped image width=%d, height=%d, len=%d", width, new_height, len);
+// }
+
+
 esp_err_t camera_capture(char * FileName, size_t *pictureSize)
 {
 	//clear internal queue
@@ -61,73 +92,59 @@ esp_err_t camera_capture(char * FileName, size_t *pictureSize)
 }
 
 
-// esp_err_t camera_capture(const char *imageFileName, size_t *out_size) {
-//     //clear internal queue
-// 	//for(int i=0;i<2;i++) {
-// 	for(int i=0;i<1;i++) {
-// 		camera_fb_t * fb = esp_camera_fb_get();
-// 		ESP_LOGI(TAG, "fb->len=%d", fb->len);
-// 		esp_camera_fb_return(fb);
-// 	}
+// // Function to capture an image and save it to a specified path
+// esp_err_t capture_image2(char *imageFileName, size_t imageFileNameSize) {
+//     esp_err_t ret;
+//     strcpy(imageFileName, "/spiffs/capture.jpeg");
 
-// 	//acquire a frame
-// 	camera_fb_t * fb = esp_camera_fb_get();
-// 	if (!fb) {
-// 		ESP_LOGE(TAG, "Camera Capture Failed");
-// 		return ESP_FAIL;
-// 	}
-
-
-//     // Original dimensions
-//     int original_width = fb->width;
-//     int original_height = fb->height;
-
-//     // Crop dimensions
-//     int crop_width = 640;
-//     int crop_height = 280;
-
-//     // Calculate starting point for cropping (focus on lower part of the image)
-//     int start_x = (original_width - crop_width) / 2;
-//     int start_y = original_height - crop_height;
-
-//     // Allocate buffer for cropped image
-//     size_t cropped_size = crop_width * crop_height * 3; // Assuming RGB888 format
-//     uint8_t *cropped_buf = (uint8_t *)malloc(cropped_size);
-//     if (!cropped_buf) {
-//         ESP_LOGE(TAG, "Failed to allocate memory for cropped image");
-//         esp_camera_fb_return(fb);
-//         return ESP_ERR_NO_MEM;
+//     // Delete local file if it exists
+//     struct stat statBuf;
+//     if (stat(imageFileName, &statBuf) == 0) {
+//         unlink(imageFileName);
+//         ESP_LOGI(TAG, "Delete Local file");
 //     }
 
-//     // Crop the image
-//     for (int y = 0; y < crop_height; y++) {
-//         for (int x = 0; x < crop_width; x++) {
-//             int orig_index = ((start_y + y) * original_width + (start_x + x)) * 3;
-//             int crop_index = (y * crop_width + x) * 3;
-//             cropped_buf[crop_index] = fb->buf[orig_index];
-//             cropped_buf[crop_index + 1] = fb->buf[orig_index + 1];
-//             cropped_buf[crop_index + 2] = fb->buf[orig_index + 2];
+// #if CONFIG_ENABLE_FLASH
+//     // Flash Light ON
+//     gpio_set_level(CONFIG_GPIO_FLASH, 1);
+// #endif
+
+//     // Save Picture to Local file
+//     int retryCounter = 0;
+//     while (1) {
+//         size_t pictureSize;
+//         ret = camera_capture(imageFileName, &pictureSize);
+//         ESP_LOGI(TAG, "camera_capture=%d", ret);
+//         ESP_LOGI(TAG, "pictureSize=%d", pictureSize);
+//         if (ret != ESP_OK) continue;
+//         if (stat(imageFileName, &statBuf) == 0) {
+//             ESP_LOGI(TAG, "st_size=%d", (int)statBuf.st_size);
+//             if (statBuf.st_size == pictureSize) break;
+//             retryCounter++;
+//             ESP_LOGI(TAG, "Retry capture %d", retryCounter);
+//             if (retryCounter > 10) {
+//                 ESP_LOGE(TAG, "Retry over for capture");
+//                 break;
+//             }
+//             vTaskDelay(1000 / portTICK_PERIOD_MS);
 //         }
 //     }
 
-//     // Save or process cropped image
-//     // Example: Save cropped image to a file
-//     FILE *file = fopen(imageFileName, "wb");
-//     if (!file) {
-//         ESP_LOGE(TAG, "Failed to open file for writing");
-//         free(cropped_buf);
-//         esp_camera_fb_return(fb);
+// #if CONFIG_ENABLE_FLASH
+//     // Flash Light OFF
+//     gpio_set_level(CONFIG_GPIO_FLASH, 0);
+// #endif
+
+//     // Get Image size
+//     if (stat(imageFileName, &statBuf) != 0) {
+//         ESP_LOGE(TAG, "[%s] not found", imageFileName);
 //         return ESP_FAIL;
 //     }
-//     fwrite(cropped_buf, 1, cropped_size, file);
-//     fclose(file);
+//     ESP_LOGI(TAG, "%s st.st_size=%ld", imageFileName, statBuf.st_size);
 
-//     // Clean up
-//     *out_size = cropped_size;
-//     free(cropped_buf);
-//     esp_camera_fb_return(fb);
 //     return ESP_OK;
 // }
+
 
 // Calculate the size after conversion to base64
 // http://akabanessa.blog73.fc2.com/blog-entry-83.html

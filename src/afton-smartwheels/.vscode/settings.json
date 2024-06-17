@@ -8,18 +8,23 @@
     },
     "idf.espIdfPath": "/Users/danieldenis/esp/esp-idf",
     "idf.openOcdConfigs": [
-        "interface/ftdi/esp32_devkitj_v1.cfg",
-        "target/esp32s3.cfg"
+        "board/esp32s3-builtin.cfg"
     ],
     "idf.port": "/dev/cu.usbserial-14120",
     "idf.pythonBinPath": "/Users/danieldenis/.espressif/python_env/idf5.2_py3.10_env/bin/python",
     "idf.toolsPath": "/Users/danieldenis/.espressif",
     "idf.flashType": "UART",
-    "python.pythonPath": "$HOME/.espressif/python_env/idf5.2_py3.10_env/bin/python",
+    "python.pythonPath": "/Users/danieldenis/.espressif/python_env/idf5.2_py3.10_env/bin/python",
     "files.associations": {
         "esp_http_server.h": "c",
         "ledc.h": "c",
         "ledc_types.h": "c",
-        "vl53l4cd_api.h": "c"
+        "vl53l4cd_api.h": "c",
+        "esp_camera.h": "c"
+    },
+    "C_Cpp.default.compilerPath": "/Users/danieldenis/.espressif/tools/xtensa-esp-elf/esp-13.2.0_20240305/xtensa-esp-elf/bin/xtensa-esp32s3-elf-gcc",
+    "terminal.integrated.env.osx": {
+        "IDF_PATH": "/Users/danieldenis/esp/esp-idf",
+        "PATH": "$PATH:/Users/danieldenis/.espressif/tools/xtensa-esp-elf/esp-13.2.0_20240305/xtensa-esp-elf/bin"
     }
 }

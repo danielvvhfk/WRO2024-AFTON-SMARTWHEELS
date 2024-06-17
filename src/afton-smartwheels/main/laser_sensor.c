@@ -9,44 +9,79 @@ static const char *TAG = "VL53L4CD";
 
 // I2C Master Initialization
 static esp_err_t i2c_master_init(void) {
+    ESP_LOGI(TAG, "Initializing I2C...");
     i2c_config_t conf = {
         .mode = I2C_MODE_MASTER,
-        .sda_io_num = I2C_MASTER_SDA_IO,
+        .sda_io_num = I2C0_MASTER_SDA_IO,
         .sda_pullup_en = GPIO_PULLUP_ENABLE,
-        .scl_io_num = I2C_MASTER_SCL_IO,
+        .scl_io_num = I2C0_MASTER_SCL_IO,
         .scl_pullup_en = GPIO_PULLUP_ENABLE,
-        .master.clk_speed = I2C_MASTER_FREQ_HZ,
+        .master.clk_speed = I2C0_MASTER_FREQ_HZ,
     };
-    i2c_param_config(I2C_MASTER_NUM, &conf);
-    return i2c_driver_install(I2C_MASTER_NUM, conf.mode, 0, 0, 0);
+    i2c_param_config(I2C0_MASTER_NUM, &conf);
+    // return i2c_driver_install(I2C1_MASTER_NUM, conf.mode, 0, 0, 0);
+    ESP_LOGI(TAG, "I2C driver install");
+    esp_err_t ret = i2c_driver_install(I2C_NUM_0, conf.mode, 0, 0, 0);
+    if (ret != ESP_OK) {
+        ESP_LOGE(TAG, "I2C driver install error: %s", esp_err_to_name(ret));
+    }
+    return ret;
 }
 
 // Laser Sensor Initialization
 esp_err_t laser_sensor_init(void) {
-    i2c_master_init();
+    esp_err_t ret;
+    VL53L4CD_Error status;
+    uint16_t sensor_id;
 
+    ESP_LOGI(TAG, "Initializing I2C...");
+    ret = i2c_master_init();
+    if (ret != ESP_OK) {
+        ESP_LOGE(TAG, "Failed to initialize I2C");
+        return ret;
+    }
+
+   
     // Initialize the XSHUT pin
+    ESP_LOGI(TAG, " Initialize the XSHUT pin");
     gpio_reset_pin(XSHUT_PIN);  // Reset the pin before setting direction
-    esp_err_t ret = gpio_set_direction(XSHUT_PIN, GPIO_MODE_OUTPUT);
+    ret = gpio_set_direction(XSHUT_PIN, GPIO_MODE_OUTPUT);
     if (ret != ESP_OK) {
         ESP_LOGE(TAG, "Failed to set GPIO direction: %s", esp_err_to_name(ret));
         return ret;
     }
 
     // Power cycle the sensor
+    ESP_LOGI(TAG, "Power cycle the sensor");
     gpio_set_level(XSHUT_PIN, 0);
-    vTaskDelay(100 / portTICK_PERIOD_MS);
+    // vTaskDelay(100 / portTICK_PERIOD_MS);
+    // gpio_set_level(XSHUT_PIN, 1);
+    // vTaskDelay(100 / portTICK_PERIOD_MS);
+    vTaskDelay(pdMS_TO_TICKS(100));  // Convert 100ms to ticks
     gpio_set_level(XSHUT_PIN, 1);
-    vTaskDelay(100 / portTICK_PERIOD_MS);
+    vTaskDelay(pdMS_TO_TICKS(100));  // Convert 100ms to ticks
+
+
+    ESP_LOGI(TAG, "VL53L4CD- tryGetSensorId");
+
+    // Check if sensor is connected
+    status = VL53L4CD_GetSensorId(VL53L4CD_I2C_ADDRESS, &sensor_id);
+    if (status || (sensor_id != 0xEBAA)) {
+        ESP_LOGE(TAG, "VL53L4CD not detected at requested address with ret status: %d", status);
+        ESP_LOGE(TAG, "VL53L4CD sensorid: %d", sensor_id);
+        return ESP_FAIL;
+    }
 
     // Initialize the sensor
-    VL53L4CD_Error status;
+    ESP_LOGI(TAG, "Initialize the sensor VL53L4CD");
+    // VL53L4CD_Error status;
     status = VL53L4CD_SensorInit(VL53L4CD_I2C_ADDRESS);
     if (status != VL53L4CD_ERROR_NONE) {
         ESP_LOGE(TAG, "Sensor init failed with status: %d", status);
         return ESP_FAIL;
     }
 
+    ESP_LOGI(TAG, "VL53L4CD ULD ready!");
     return ESP_OK;
 }
 

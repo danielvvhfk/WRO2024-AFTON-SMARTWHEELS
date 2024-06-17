@@ -1,2 +1,2 @@
-idf_component_register(SRCS "servo_drv.c" "platform.c" "VL53L4CD_api.c" "laser_sensor.c" "self_driving_main.c" "webserver.c" "image_sender.c" "camera_capture.c"
+idf_component_register(SRCS  "motor_drv.c" "servo_drv.c" "platform.c" "VL53L4CD_api.c" "laser_sensor.c" "self_driving_main.c" "webserver.c" "image_sender.c" "camera_capture.c"
                        INCLUDE_DIRS ".")

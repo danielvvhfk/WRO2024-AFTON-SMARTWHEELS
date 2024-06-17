@@ -27,9 +27,12 @@
     <input type="button" class="control-button" value="&#x23F8;" onclick="send_move_command('MOV_STOP');">
     <input type="button" class="control-button" value="&darr;" onclick="send_move_command('MOV_BACK');">
 
-   
+    <input type="text" id="speed_value" class="input-field" placeholder="Speed" value="100">
     <input type="text" id="steering_value" class="input-field" placeholder="Steering">
     <input type="button" value="send steering" onclick="send_steering();">
+
+    <input type="button" value="Get Distance" onclick="send_get_distance_command();">
+    <div id="distance_display">Distance: N/A</div>
   </div>
   <div id="take">
     <input type="button" value="take picture" onclick="on_take_picture();">
@@ -45,10 +48,10 @@
 
   <script>
     var web_socket = null;
-    var reconnectInterval = 100; // Reconnect every 1 second
+    var reconnectInterval = 20; // Reconnect every 1 second
     var reconnectAttempts = 0;
     var maxReconnectAttempts = 10;
-
+    var cmd = null;
 
     function on_load() {
       document.getElementById('take').style.display = 'none';
@@ -69,26 +72,39 @@
         document.getElementById('connect').style.display = 'none';
         document.getElementById('error-message').style.display = 'none';
         reconnectAttempts = 0; // Reset reconnect attempts on successful connection
-      
       };
       web_socket.onmessage = on_message;
       web_socket.onerror = on_error;
-      // web_socket.onclose = on_close;
     }
 
     function send_move_command(command) {
       cmd = command; // Set the local variable cmd before sending the command
 
+      var speed = parseInt(document.getElementById('speed_value').value);
+      if (isNaN(speed) || speed < 0 || speed > 100) {
+        speed = 100; // Default speed
+      }
+
       var message = {
         command: command,
         steering: 0, // You can set these values dynamically if needed
-        speed: 0
+        speed: speed
       };
-      console.log("Sending command: ", message);
+      // console.log("Sending command: ", message);
       web_socket.send(JSON.stringify(message));
+
+      // reconnect_websocket();
+      // var message = {
+      //   command: 'MOV_STOP',
+      //   steering: 0, // You can set these values dynamically if needed
+      //   speed: speed
+      // };
+      // // console.log("Sending command: ", message);
+      // web_socket.send(JSON.stringify(message));
+
     }
 
-    function send_steering_command(command,pos) {
+    function send_steering_command(command, pos) {
       cmd = command; // Set the local variable cmd before sending the command
 
       var message = {
@@ -96,7 +112,7 @@
         steering: pos, // You can set these values dynamically if needed
         speed: 0
       };
-      console.log("Sending command: ", message);
+      // console.log("Sending command: ", message);
       web_socket.send(JSON.stringify(message));
     }
 
@@ -109,57 +125,46 @@
       }
     }
 
-
     function on_take_picture() {
-      cmd = "TAKE_IMG";
+      cmd = "TAKE_IMG"; // Set the local variable cmd before sending the command
+
       var message = {
         command: "TAKE_IMG"
       };
-      console.log("Sending command: ", message);
+      // console.log("Sending command: ", message);
       web_socket.send(JSON.stringify(message));
     }
 
     function on_report_api() {
-      cmd = "SEND_IMG";
+      cmd = "SEND_IMG"; // Set the local variable cmd before sending the command
+
       var message = {
         command: "SEND_IMG"
+      };
+      // console.log("Sending command: ", message);
+      web_socket.send(JSON.stringify(message));
+    }
+
+    function send_get_distance_command() {
+      cmd = "GET_DIST"; // Set the local variable cmd before sending the command
+
+      var message = {
+        command: "GET_DIST"
       };
       console.log("Sending command: ", message);
       web_socket.send(JSON.stringify(message));
     }
 
     function on_error(event) {
-      console.error("WebSocket error: ", event);
-      // document.getElementById('take').style.display = 'none';
-      // document.getElementById('controls').style.display = 'none';
-      // document.getElementById('fail').style.display = 'inline';
+      // console.error("WebSocket error: ", event);
       // display_error("WebSocket error: " + event.message);
-      display_error("WebSocket error: " + event.message);
       reconnect_websocket();
     }
 
-    function on_close(event) {
-      console.log("WebSocket connection closed: ", event);
-      document.getElementById('take').style.display = 'none';
-      document.getElementById('controls').style.display = 'none';
-      document.getElementById('fail').style.display = 'inline';
-      display_error("WebSocket connection closed: Code " + event.code + " Reason: " + event.reason);
-    }
 
     function on_message(event) {
-      // console.log("Received message: ", event.data);
       try {
-        // var message = JSON.parse(event.data);
-        // console.log("Parsed message: ", message);
-
         if (cmd === "SEND_IMG" || cmd === "TAKE_IMG") {
-          // image_data += message.data; // Append received chunk to the image data
-
-          // // If this is the last chunk, display the image
-          // var canvas_image = document.getElementById('canvas_image');
-          // var ctx = canvas_image.getContext('2d');
-          // var image = new Image();
-          // image.src = 'data:image/jpeg;base64,' + image_data;
           var recv_image_data = new Uint8Array(event.data);
           var canvas_image = document.getElementById('canvas_image');
           var ctx = canvas_image.getContext('2d');
@@ -168,6 +173,9 @@
           image.onload = function() {
             ctx.drawImage(image, 0, 0);
           };
+        } else if (cmd === "GET_DIST") {
+          var distance = JSON.parse(event.data).distance;
+          document.getElementById('distance_display').innerText = "Distance: " + distance + " mm";
         } else {
           console.log("Command executed: ", message.command);
         }
@@ -175,6 +183,7 @@
         console.error("Failed to parse message: ", e);
       }
     }
+
     function reconnect_websocket() {
       if (reconnectAttempts < maxReconnectAttempts) {
         setTimeout(function() {
@@ -187,7 +196,6 @@
         display_error("Max reconnect attempts reached. Please reload the page.");
       }
     }
-
 
     function display_error(message) {
       var errorMessage = document.getElementById('error-message');

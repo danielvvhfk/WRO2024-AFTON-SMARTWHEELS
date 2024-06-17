@@ -797,6 +797,12 @@
 /Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/build/esp-idf/wifi_provisioning/CMakeFiles/install.dir
 /Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/build/esp-idf/wifi_provisioning/CMakeFiles/install/local.dir
 /Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/build/esp-idf/wifi_provisioning/CMakeFiles/install/strip.dir
+/Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/build/esp-idf/esp-dl/CMakeFiles/edit_cache.dir
+/Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/build/esp-idf/esp-dl/CMakeFiles/rebuild_cache.dir
+/Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/build/esp-idf/esp-dl/CMakeFiles/list_install_components.dir
+/Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/build/esp-idf/esp-dl/CMakeFiles/install.dir
+/Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/build/esp-idf/esp-dl/CMakeFiles/install/local.dir
+/Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/build/esp-idf/esp-dl/CMakeFiles/install/strip.dir
 /Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/build/esp-idf/espressif__esp32-camera/CMakeFiles/__idf_espressif__esp32-camera.dir
 /Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/build/esp-idf/espressif__esp32-camera/CMakeFiles/edit_cache.dir
 /Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/build/esp-idf/espressif__esp32-camera/CMakeFiles/rebuild_cache.dir
