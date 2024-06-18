@@ -20,182 +20,120 @@
 #include "esp_camera.h"
 
 #include "esp_http_server.h"
+#include "camera_capture.h"
 
 static const char *TAG = "WS_SERVER";
 
 
-// // Function to process and crop the image to 640x230
-// void process_image(uint16_t width, uint16_t height, pixformat_t format, uint8_t *buf, size_t len)
-// {
-//     // New height after cropping
-//     uint16_t new_height = 230;
-//     uint32_t new_len = width * new_height * 3; // 3 bytes per pixel for RGB
-
-//     // Allocate memory for the cropped image
-//     uint8_t *new_buf = (uint8_t *)malloc(new_len);
-//     if (!new_buf) {
-//         ESP_LOGE(TAG, "Failed to allocate memory for the cropped image");
-//         return;
-//     }
-
-//     // Copy the relevant part of the image to the new buffer
-//     uint32_t offset = width * (height - new_height) * 3; // Start from the bottom part of the image
-//     memcpy(new_buf, buf + offset, new_len);
-
-//     // Free the original buffer if necessary
-//     // free(buf);
-
-//     // Point the buffer to the new cropped image
-//     buf = new_buf;
-//     len = new_len;
-
-//     // Log the new image dimensions and length
-//     ESP_LOGI(TAG, "Cropped image width=%d, height=%d, len=%d", width, new_height, len);
-// }
-
-
-esp_err_t camera_capture(char * FileName, size_t *pictureSize)
-{
-	//clear internal queue
-	//for(int i=0;i<2;i++) {
-	for(int i=0;i<1;i++) {
-		camera_fb_t * fb = esp_camera_fb_get();
-		ESP_LOGI(TAG, "fb->len=%d", fb->len);
-		ESP_LOGI(TAG, "fb->height=%d", fb->height);
-		ESP_LOGI(TAG, "fb->width=%d", fb->width);
-		esp_camera_fb_return(fb);
-	}
-
-	//acquire a frame
-	camera_fb_t * fb = esp_camera_fb_get();
-	if (!fb) {
-		ESP_LOGE(TAG, "Camera Capture Failed");
-		return ESP_FAIL;
-	}
-
-	//replace this with your own function
-	//process_image(fb->width, fb->height, fb->format, fb->buf, fb->len);
-	FILE* f = fopen(FileName, "wb");
-	if (f == NULL) {
-		ESP_LOGE(TAG, "Failed to open file for writing");
-		return ESP_FAIL; 
-	}
-	fwrite(fb->buf, fb->len, 1, f);
-	ESP_LOGI(TAG, "fb->len=%d", fb->len);
-	*pictureSize = (size_t)fb->len;
-	fclose(f);
-	
-	//return the frame buffer back to the driver for reuse
-	esp_camera_fb_return(fb);
-
-	return ESP_OK;
+// Implementation of calcBase64EncodedSize
+int32_t calcBase64EncodedSize(int size) {
+    return ((size + 2) / 3) * 4;
 }
 
-
-// // Function to capture an image and save it to a specified path
-// esp_err_t capture_image2(char *imageFileName, size_t imageFileNameSize) {
-//     esp_err_t ret;
-//     strcpy(imageFileName, "/spiffs/capture.jpeg");
-
-//     // Delete local file if it exists
-//     struct stat statBuf;
-//     if (stat(imageFileName, &statBuf) == 0) {
-//         unlink(imageFileName);
-//         ESP_LOGI(TAG, "Delete Local file");
-//     }
-
-// #if CONFIG_ENABLE_FLASH
-//     // Flash Light ON
-//     gpio_set_level(CONFIG_GPIO_FLASH, 1);
-// #endif
-
-//     // Save Picture to Local file
-//     int retryCounter = 0;
-//     while (1) {
-//         size_t pictureSize;
-//         ret = camera_capture(imageFileName, &pictureSize);
-//         ESP_LOGI(TAG, "camera_capture=%d", ret);
-//         ESP_LOGI(TAG, "pictureSize=%d", pictureSize);
-//         if (ret != ESP_OK) continue;
-//         if (stat(imageFileName, &statBuf) == 0) {
-//             ESP_LOGI(TAG, "st_size=%d", (int)statBuf.st_size);
-//             if (statBuf.st_size == pictureSize) break;
-//             retryCounter++;
-//             ESP_LOGI(TAG, "Retry capture %d", retryCounter);
-//             if (retryCounter > 10) {
-//                 ESP_LOGE(TAG, "Retry over for capture");
-//                 break;
-//             }
-//             vTaskDelay(1000 / portTICK_PERIOD_MS);
-//         }
-//     }
-
-// #if CONFIG_ENABLE_FLASH
-//     // Flash Light OFF
-//     gpio_set_level(CONFIG_GPIO_FLASH, 0);
-// #endif
-
-//     // Get Image size
-//     if (stat(imageFileName, &statBuf) != 0) {
-//         ESP_LOGE(TAG, "[%s] not found", imageFileName);
-//         return ESP_FAIL;
-//     }
-//     ESP_LOGI(TAG, "%s st.st_size=%ld", imageFileName, statBuf.st_size);
-
-//     return ESP_OK;
-// }
-
-
-// Calculate the size after conversion to base64
-// http://akabanessa.blog73.fc2.com/blog-entry-83.html
-int32_t calcBase64EncodedSize(int origDataSize)
-{
-	// Number of blocks in 6-bit units (rounded up in 6-bit units)
-	int32_t numBlocks6 = ((origDataSize * 8) + 5) / 6;
-	// Number of blocks in units of 4 characters (rounded up in units of 4 characters)
-	int32_t numBlocks4 = (numBlocks6 + 3) / 4;
-	// Number of characters without line breaks
-	int32_t numNetChars = numBlocks4 * 4;
-	// Size considering line breaks every 76 characters (line breaks are "\ r \ n")
-	//return numNetChars + ((numNetChars / 76) * 2);
-	return numNetChars;
+// Implementation of Image2Base64
+esp_err_t Image2Base64(const char *imageFileName, size_t base64BufferLen, uint8_t *base64Buffer) {
+    // Add your implementation for converting an image to Base64 here
+    return ESP_OK; // Return ESP_OK for the sake of this example
 }
 
-esp_err_t Image2Base64(char * imageFileName, size_t base64_buffer_len, uint8_t * base64_buffer)
-{
-	struct stat st;
-	if (stat(imageFileName, &st) != 0) {
-		ESP_LOGE(TAG, "[%s] not found", imageFileName);
-		return ESP_FAIL;
-	}
-	ESP_LOGI(TAG, "%s st.st_size=%ld", imageFileName, st.st_size);
+// Implementation of camera_capture
+esp_err_t camera_capture(const char *imageFileName, size_t *pictureSize) {
+    camera_fb_t *pic = esp_camera_fb_get();
+    if (!pic) {
+        ESP_LOGE(TAG, "Failed to capture image");
+        return ESP_FAIL;
+    }
 
-	// Allocate image memory
-	unsigned char*	image_buffer = NULL;
-	size_t image_buffer_len = st.st_size;
-	image_buffer = malloc(image_buffer_len);
-	if (image_buffer == NULL) {
-		ESP_LOGE(TAG, "malloc fail. image_buffer_len %d", image_buffer_len);
-		return ESP_FAIL;
-	}
+    FILE *file = fopen(imageFileName, "w");
+    if (!file) {
+        ESP_LOGE(TAG, "Failed to open file for writing");
+        esp_camera_fb_return(pic);
+        return ESP_FAIL;
+    }
 
-	// Read image file
-	FILE * fp_image = fopen(imageFileName,"rb");
-	if (fp_image == NULL) {
-		ESP_LOGE(TAG, "[%s] fopen fail.", imageFileName);
-		free(image_buffer);
-		return ESP_FAIL;
-	}
-	for (int i=0;i<st.st_size;i++) {
-		fread(&image_buffer[i], sizeof(char), 1, fp_image);
-	}
-	fclose(fp_image);
+    fwrite(pic->buf, 1, pic->len, file);
+    fclose(file);
 
-	// Convert from JPEG to BASE64
-	size_t encord_len;
-	esp_err_t ret = mbedtls_base64_encode(base64_buffer, base64_buffer_len, &encord_len, image_buffer, st.st_size);
-	ESP_LOGI(TAG, "mbedtls_base64_encode=%d encord_len=%d", ret, encord_len);
+    *pictureSize = pic->len;
+    esp_camera_fb_return(pic);
 
-	free(image_buffer);
-	return ESP_OK;
+    ESP_LOGI(TAG, "Image saved to %s, size: %d", imageFileName, *pictureSize);
+
+    return ESP_OK;
+}
+
+esp_err_t get_image(char *imageFileName, size_t imageFileNameSize) {
+    esp_err_t ret;
+    strcpy(imageFileName, "/spiffs/capture.jpeg");
+
+    // Delete local file if it exists
+    struct stat statBuf;
+    if (stat(imageFileName, &statBuf) == 0) {
+        unlink(imageFileName);
+        ESP_LOGI(TAG, "Delete Local file");
+    }
+
+#if CONFIG_ENABLE_FLASH
+    // Flash Light ON
+    gpio_set_level(CONFIG_GPIO_FLASH, 1);
+#endif
+
+    // Save Picture to Local file
+    int retryCounter = 0;
+    while (1) {
+        size_t pictureSize;
+        ret = camera_capture(imageFileName, &pictureSize);
+        ESP_LOGI(TAG, "camera_capture=%d", ret);
+        ESP_LOGI(TAG, "pictureSize=%d", pictureSize);
+        if (ret != ESP_OK) continue;
+        if (stat(imageFileName, &statBuf) == 0) {
+            ESP_LOGI(TAG, "st_size=%d", (int)statBuf.st_size);
+            if (statBuf.st_size == pictureSize) break;
+            retryCounter++;
+            ESP_LOGI(TAG, "Retry capture %d", retryCounter);
+            if (retryCounter > 10) {
+                ESP_LOGE(TAG, "Retry over for capture");
+                break;
+            }
+            vTaskDelay(1000 / portTICK_PERIOD_MS);
+        }
+    }
+
+#if CONFIG_ENABLE_FLASH
+    // Flash Light OFF
+    gpio_set_level(CONFIG_GPIO_FLASH, 0);
+#endif
+
+    // Get Image size
+    if (stat(imageFileName, &statBuf) != 0) {
+        ESP_LOGE(TAG, "[%s] not found", imageFileName);
+        return ESP_FAIL;
+    }
+    ESP_LOGI(TAG, "%s st.st_size=%ld", imageFileName, statBuf.st_size);
+
+    // Get Base64 size
+    int32_t base64Size = calcBase64EncodedSize(statBuf.st_size);
+    ESP_LOGI(TAG, "base64Size=%" PRIi32, base64Size);
+
+    // Allocate Base64 buffer
+    uint8_t *base64_buffer = NULL;
+    size_t base64_buffer_len = base64Size + 1;
+    base64_buffer = calloc(1, base64_buffer_len);
+    if (base64_buffer == NULL) {
+        ESP_LOGE(TAG, "calloc fail. base64_buffer_len %d", base64_buffer_len);
+        return ESP_FAIL;
+    }
+    memset(base64_buffer, 0, base64_buffer_len);
+
+    // Convert from Image to Base64
+    ret = Image2Base64(imageFileName, base64_buffer_len, base64_buffer);
+    ESP_LOGI(TAG, "Image2Base64=%d", ret);
+    if (ret != ESP_OK) {
+        free(base64_buffer);
+        return ret;
+    }
+
+    free(base64_buffer);
+
+    return ESP_OK;
 }

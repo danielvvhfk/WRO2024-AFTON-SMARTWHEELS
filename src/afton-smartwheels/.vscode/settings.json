@@ -10,7 +10,7 @@
     "idf.openOcdConfigs": [
         "board/esp32s3-builtin.cfg"
     ],
-    "idf.port": "/dev/cu.usbserial-14120",
+    "idf.port": "/dev/cu.usbserial-14130",
     "idf.pythonBinPath": "/Users/danieldenis/.espressif/python_env/idf5.2_py3.10_env/bin/python",
     "idf.toolsPath": "/Users/danieldenis/.espressif",
     "idf.flashType": "UART",
@@ -20,7 +20,8 @@
         "ledc.h": "c",
         "ledc_types.h": "c",
         "vl53l4cd_api.h": "c",
-        "esp_camera.h": "c"
+        "esp_camera.h": "c",
+        "modelai.h": "c"
     },
     "C_Cpp.default.compilerPath": "/Users/danieldenis/.espressif/tools/xtensa-esp-elf/esp-13.2.0_20240305/xtensa-esp-elf/bin/xtensa-esp32s3-elf-gcc",
     "terminal.integrated.env.osx": {

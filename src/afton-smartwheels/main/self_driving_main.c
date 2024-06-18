@@ -40,9 +40,20 @@
 
 #include "esp_camera.h"
 #include "camera_pin.h"
+#include "camera_capture.h"
+// #include "modelAi.h"
+#include "motor_drv.h""
 
-#define WIFI_SSID "DENIS2.6"
-#define WIFI_PASS "0sc@rddx3anc1"
+
+// WiFi credentials
+#ifndef WIFI_SSID
+#define WIFI_SSID "AFTON"
+#endif
+
+#ifndef WIFI_PASS
+#define WIFI_PASS "123456789"
+#endif
+
 
 #include "image_sender.h"
 #include "laser_sensor.h"
@@ -67,6 +78,8 @@ static uint8_t s_led_state = 0;
 #define MOTOR_ENABLE_PIN GPIO_NUM_42
 #define MOTOR_IN3_PIN GPIO_NUM_45
 #define MOTOR_IN4_PIN GPIO_NUM_46
+
+#define  START_SW_PIN GPIO_NUM_35
 
 static void blink_led(void)
 {
@@ -334,18 +347,48 @@ void servo_test_task(void *arg) {
 }
 
 
+void configure_start_switch() {
+    gpio_config_t io_conf2;
+    
+    // Configure GPIO for the start switch
+    io_conf2.intr_type = GPIO_INTR_DISABLE;          // No interrupts
+    io_conf2.mode = GPIO_MODE_INPUT;                 // Set as input mode
+    io_conf2.pin_bit_mask = (1ULL << START_SW_PIN);  // Pin bit mask for GPIO 35
+    io_conf2.pull_down_en = GPIO_PULLDOWN_DISABLE;   // Disable pull down
+    io_conf2.pull_up_en = GPIO_PULLUP_ENABLE;        // Enable pull up
+    
+    gpio_config(&io_conf2);                          // Configure the GPIO with the settings
+}
+
+void wait_for_start_button() {
+    int level = gpio_get_level(START_SW_PIN);
+    while (level == 1) {
+        // Add a delay to avoid flooding the log
+        vTaskDelay(1000 / portTICK_PERIOD_MS);
+        level = gpio_get_level(START_SW_PIN);  // Check the button state again
+    }
+}
+
+
 void app_main(void)
 {
 
-	gpio_config_t io_conf;
+	// gpio_config_t io_conf;
 
-    // Configure GPIOs for motor control
-    io_conf.intr_type = GPIO_INTR_DISABLE;
-    io_conf.mode = GPIO_MODE_OUTPUT;
-    io_conf.pin_bit_mask = (1ULL << MOTOR_ENABLE_PIN) | (1ULL << MOTOR_IN3_PIN) | (1ULL << MOTOR_IN4_PIN);
-    io_conf.pull_down_en = GPIO_PULLDOWN_DISABLE;
-    io_conf.pull_up_en = GPIO_PULLUP_DISABLE;
-    gpio_config(&io_conf);
+    // // Configure GPIOs for motor control
+    // io_conf.intr_type = GPIO_INTR_DISABLE;
+    // io_conf.mode = GPIO_MODE_OUTPUT;
+    // io_conf.pin_bit_mask = (1ULL << MOTOR_ENABLE_PIN) | (1ULL << MOTOR_IN3_PIN) | (1ULL << MOTOR_IN4_PIN);
+    // io_conf.pull_down_en = GPIO_PULLDOWN_DISABLE;
+    // io_conf.pull_up_en = GPIO_PULLUP_DISABLE;
+    // gpio_config(&io_conf);
+
+	// init motor
+	motor_driver_init();
+
+	// Configure the start switch GPIO
+    configure_start_switch();
+
 
     /* Configure the peripheral according to the LED type */
     configure_led();
@@ -360,7 +403,7 @@ void app_main(void)
 	ESP_ERROR_CHECK(ret);
 
 	// Initilize WiFi
-	wifi_init_sta();
+	// wifi_init_sta();
 
 	// Initialize mDNS
 	// initialize_mdns();
@@ -384,7 +427,11 @@ void app_main(void)
 	}
 
 	/* Start the server */
-	start_webserver();
+	// start_webserver();
+	// Setup the ONNX model
+    // const char *model_path = "/spiffs/models/steering_model.onnx";
+    // setup_model(model_path);
+
 
 	 // Initialize the servo driver
     ret = servo_driver_init();
@@ -392,13 +439,45 @@ void app_main(void)
         ESP_LOGE(TAG, "Failed to initialize servo driver");
     }
 
-	// Create a task to test the servo
+	
+    // Wait for the start button to be pressed
+    printf("Waiting for start button to be pressed...\n");
+    wait_for_start_button();
+    printf("Start button pressed, continuing...\n");
+
+	int press_count = 0;
+    while (press_count < 10) {
+        char imageFileName[256];
+        strcpy(imageFileName, "/spiffs/capture.jpeg");
+        esp_err_t ret = get_image(imageFileName, sizeof(imageFileName));
+        if (ret != ESP_OK) {
+            ESP_LOGE(TAG, "Failed to capture image");
+            return;
+        }
+
+		// move forward
+		move_forward(90, 60);
+		press_count++;
+		 
+		if (press_count == 10)
+
+
+        // // Perform inference
+        // float steering_angle = perform_inference(imageFileName);
+
+        // // Print the inferred steering angle
+        // printf("Inferred Steering Angle: %f\n", steering_angle);
+
+        // Add a delay to avoid flooding the log
+        vTaskDelay(1000 / portTICK_PERIOD_MS);
+    }	// Create a task to test the servo
     // xTaskCreate(servo_test_task, "servo_test_task", SERVO_TEST_TASK_STACK_SIZE, NULL, SERVO_TEST_TASK_PRIORITY, NULL);
    
-
+	// Call move_stop function after button has been pressed 10 times
+    move_stop();
    
     // Assuming you receive a command to capture and send an image
-    send_image_to_server("/spiffs/capture.jpeg");
+    // send_image_to_server("/spiffs/capture.jpeg");
 
 	// esp_err_t ret= ESP_OK;
     uint16_t distance;
