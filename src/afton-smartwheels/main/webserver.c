@@ -31,7 +31,7 @@
 #include "esp_http_server.h"
 #include "camera_capture.h"
 #include "image_sender.h" // Adjust this include to match your actual file names
-
+#include "motor_drv.h"
 
 static const char *TAG = "WS_SERVER";
 
@@ -49,37 +49,37 @@ static const char *TAG = "WS_SERVER";
 #define MOTOR_IN4_PIN GPIO_NUM_46
 
 // Function prototypes
-void move_forward(int steering, int speed);
-void move_stop(void);
-void move_backward(int steering, int speed);
+// void move_forward(int steering, int speed);
+// void move_stop(void);
+// void move_backward(int steering, int speed);
 esp_err_t capture_image(httpd_req_t *req, char *imageFileName, size_t imageFileNameSize);
 esp_err_t send_image_to_api(httpd_req_t *req);
 
 
 
-// Example implementations of command functions
-void move_forward(int steering, int speed) {
-	gpio_set_level(MOTOR_ENABLE_PIN, 1); // Enable the motor
-    gpio_set_level(MOTOR_IN3_PIN, 1);
-    gpio_set_level(MOTOR_IN4_PIN, 0);
-    // Implement your move forward logic here
-    ESP_LOGI(TAG, "Moving forward with steering %d and speed %d", steering, speed);
-}
+// // Example implementations of command functions
+// void move_forward(int steering, int speed) {
+// 	gpio_set_level(MOTOR_ENABLE_PIN, 1); // Enable the motor
+//     gpio_set_level(MOTOR_IN3_PIN, 1);
+//     gpio_set_level(MOTOR_IN4_PIN, 0);
+//     // Implement your move forward logic here
+//     ESP_LOGI(TAG, "Moving forward with steering %d and speed %d", steering, speed);
+// }
 
-void move_stop(void) {
-	gpio_set_level(MOTOR_ENABLE_PIN, 0); // Disable the motor
-    // Implement your stop logic here
-    ESP_LOGI(TAG, "Stopping");
-}
+// void move_stop(void) {
+// 	gpio_set_level(MOTOR_ENABLE_PIN, 0); // Disable the motor
+//     // Implement your stop logic here
+//     ESP_LOGI(TAG, "Stopping");
+// }
 
 
-void move_backward(int steering, int speed) {
-	gpio_set_level(MOTOR_ENABLE_PIN, 1); // Enable the motor
-    gpio_set_level(MOTOR_IN3_PIN, 0);
-    gpio_set_level(MOTOR_IN4_PIN, 1);
-    // Implement your move backward logic here
-    ESP_LOGI(TAG, "Moving backward with steering %d and speed %d", steering, speed);
-}
+// void move_backward(int steering, int speed) {
+// 	gpio_set_level(MOTOR_ENABLE_PIN, 1); // Enable the motor
+//     gpio_set_level(MOTOR_IN3_PIN, 0);
+//     gpio_set_level(MOTOR_IN4_PIN, 1);
+//     // Implement your move backward logic here
+//     ESP_LOGI(TAG, "Moving backward with steering %d and speed %d", steering, speed);
+// }
 
 void move_steering(int steering) {
     set_servo_angle(steering);

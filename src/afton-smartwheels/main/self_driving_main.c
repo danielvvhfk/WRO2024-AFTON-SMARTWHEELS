@@ -42,7 +42,7 @@
 #include "camera_pin.h"
 #include "camera_capture.h"
 // #include "modelAi.h"
-#include "motor_drv.h""
+#include "motor_drv.h"
 
 
 // WiFi credentials
@@ -383,8 +383,6 @@ void app_main(void)
     // io_conf.pull_up_en = GPIO_PULLUP_DISABLE;
     // gpio_config(&io_conf);
 
-	// init motor
-	motor_driver_init();
 
 	// Configure the start switch GPIO
     configure_start_switch();
@@ -439,38 +437,99 @@ void app_main(void)
         ESP_LOGE(TAG, "Failed to initialize servo driver");
     }
 
-	
+	err = motor_driver_init();
+    if (err != ESP_OK) {
+        ESP_LOGE("APP_MAIN", "Motor driver initialization failed");
+        return;
+    }
+	int steering=90;
+	set_servo_angle(steering);
+	ESP_LOGI(TAG, "Moving steering %d", steering);
+	   
+
     // Wait for the start button to be pressed
     printf("Waiting for start button to be pressed...\n");
     wait_for_start_button();
     printf("Start button pressed, continuing...\n");
 
-	int press_count = 0;
-    while (press_count < 5) {
-        char imageFileName[256];
-        strcpy(imageFileName, "/spiffs/capture.jpeg");
-        esp_err_t ret = get_image(imageFileName, sizeof(imageFileName));
-        if (ret != ESP_OK) {
-            ESP_LOGE(TAG, "Failed to capture image");
-            return;
-        }
 
-		// move forward
-		move_forward(90, 70);
-		press_count++;
+	int lap_count = 0;
+	int sector_count = 0;
+
+	while (lap_count < 1) {
+		// Define the steering angle for each sector
+		int steering;
+		if (sector_count % 2 == 0) {
+			// Straight sector
+			steering = 92;
+			move_forward(steering, 68); 
+		} else {
+			// Turn sector
+			steering = 124;
+		}
+
+		// Set the steering angle
+		set_servo_angle(steering);
+		ESP_LOGI(TAG, "Moving steering %d", steering);
+
+		// Move forward
+		move_forward(steering, 70); // Adjust speed as necessary
+
+		// Capture image (simulate)
+		char imageFileName[256];
+		strcpy(imageFileName, "/spiffs/capture.jpeg");
+		esp_err_t ret = get_image(imageFileName, sizeof(imageFileName));
+		if (ret != ESP_OK) {
+			ESP_LOGE(TAG, "Failed to capture image");
+			return;
+		}
+
+		// Increase sector count
+		sector_count++;
+
+		// Check if a lap is completed
+		if (sector_count >= 8) {
+			lap_count++;
+			sector_count = 0; // Reset sector count for next lap
+			printf("Lap %d completed.\n", lap_count);
+		}
+
+		// Add a delay to simulate the vehicle moving through the sector
+		if (sector_count % 2 == 0) {
+			// Straight sector
+			vTaskDelay(1900 / portTICK_PERIOD_MS); // Adjust the delay as necessary
+		} else {
+			// Turn sector
+			vTaskDelay(900 / portTICK_PERIOD_MS); // Adjust the delay as necessary
+		}
+	}
+
+	// int press_count = 0;
+    // while (press_count < 5) {
+    //     char imageFileName[256];
+    //     strcpy(imageFileName, "/spiffs/capture.jpeg");
+    //     esp_err_t ret = get_image(imageFileName, sizeof(imageFileName));
+    //     if (ret != ESP_OK) {
+    //         ESP_LOGE(TAG, "Failed to capture image");
+    //         return;
+    //     }
+
+	// 	// move forward
+	// 	move_forward(90, 70);
+	// 	press_count++;
 		 
 		
 
 
-        // // Perform inference
-        // float steering_angle = perform_inference(imageFileName);
+    //     // // Perform inference
+    //     // float steering_angle = perform_inference(imageFileName);
 
-        // // Print the inferred steering angle
-        // printf("Inferred Steering Angle: %f\n", steering_angle);
+    //     // // Print the inferred steering angle
+    //     // printf("Inferred Steering Angle: %f\n", steering_angle);
 
-        // Add a delay to avoid flooding the log
-        vTaskDelay(1000 / portTICK_PERIOD_MS);
-    }	// Create a task to test the servo
+    //     // Add a delay to avoid flooding the log
+    //     vTaskDelay(1000 / portTICK_PERIOD_MS);
+    // }	// Create a task to test the servo
     // xTaskCreate(servo_test_task, "servo_test_task", SERVO_TEST_TASK_STACK_SIZE, NULL, SERVO_TEST_TASK_PRIORITY, NULL);
    
 	// Call move_stop function after button has been pressed 10 times
