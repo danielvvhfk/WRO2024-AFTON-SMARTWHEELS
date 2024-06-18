@@ -446,7 +446,7 @@ void app_main(void)
     printf("Start button pressed, continuing...\n");
 
 	int press_count = 0;
-    while (press_count < 10) {
+    while (press_count < 5) {
         char imageFileName[256];
         strcpy(imageFileName, "/spiffs/capture.jpeg");
         esp_err_t ret = get_image(imageFileName, sizeof(imageFileName));
@@ -456,10 +456,10 @@ void app_main(void)
         }
 
 		// move forward
-		move_forward(90, 60);
+		move_forward(90, 70);
 		press_count++;
 		 
-		if (press_count == 10)
+		
 
 
         // // Perform inference
