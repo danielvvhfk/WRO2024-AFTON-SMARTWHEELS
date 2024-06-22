@@ -442,6 +442,22 @@ void app_main(void)
         ESP_LOGE("APP_MAIN", "Motor driver initialization failed");
         return;
     }
+
+	// esp_err_t ret= ESP_OK;
+    // uint16_t distance;
+
+    // ret = laser_sensor_init();
+    // if (ret != ESP_OK) {
+    //     ESP_LOGE(TAG, "Failed to initialize laser sensor");
+    //     return;
+    // }
+
+	// ret = laser_sensor_start_ranging();
+    // if (ret != ESP_OK) {
+    //     ESP_LOGE(TAG, "Failed to start ranging");
+    //     return;
+    // }
+
 	int steering=90;
 	set_servo_angle(steering);
 	ESP_LOGI(TAG, "Moving steering %d", steering);
@@ -454,53 +470,61 @@ void app_main(void)
 
 
 	int lap_count = 0;
-	int sector_count = 0;
+	int sector_count = 2;
 
-	while (lap_count < 1) {
+	while (lap_count < 4) {
 		// Define the steering angle for each sector
 		int steering;
 		if (sector_count % 2 == 0) {
 			// Straight sector
-			steering = 92;
+			steering = 95;
 			move_forward(steering, 68); 
-		} else {
+		}else {
 			// Turn sector
-			steering = 124;
+			steering = 122;
+			move_forward(steering, 70); // Adjust speed as necessary
+			vTaskDelay(840 / portTICK_PERIOD_MS);
 		}
 
 		// Set the steering angle
 		set_servo_angle(steering);
 		ESP_LOGI(TAG, "Moving steering %d", steering);
 
-		// Move forward
-		move_forward(steering, 70); // Adjust speed as necessary
 
 		// Capture image (simulate)
-		char imageFileName[256];
-		strcpy(imageFileName, "/spiffs/capture.jpeg");
-		esp_err_t ret = get_image(imageFileName, sizeof(imageFileName));
-		if (ret != ESP_OK) {
-			ESP_LOGE(TAG, "Failed to capture image");
-			return;
-		}
+		// char imageFileName[256];
+		// strcpy(imageFileName, "/spiffs/capture.jpeg");
+		// esp_err_t ret = get_image(imageFileName, sizeof(imageFileName));
+		// if (ret != ESP_OK) {
+		// 	ESP_LOGE(TAG, "Failed to capture image");
+		// 	return;
+		// }
 
 		// Increase sector count
 		sector_count++;
 
 		// Check if a lap is completed
-		if (sector_count >= 8) {
+		if (sector_count >=8 ) {
 			lap_count++;
 			sector_count = 0; // Reset sector count for next lap
 			printf("Lap %d completed.\n", lap_count);
+
+		 
 		}
+
+		// ret = laser_sensor_get_distance(&distance);
+        // if (ret == ESP_OK) {
+        //     ESP_LOGI(TAG, "Distance: %d mm", distance);
+        // } else {
+        //     ESP_LOGE(TAG, "Failed to get distance");
+        // }
 
 		// Add a delay to simulate the vehicle moving through the sector
 		if (sector_count % 2 == 0) {
 			// Straight sector
-			vTaskDelay(1900 / portTICK_PERIOD_MS); // Adjust the delay as necessary
-		} else {
-			// Turn sector
-			vTaskDelay(900 / portTICK_PERIOD_MS); // Adjust the delay as necessary
+			vTaskDelay(1875  / portTICK_PERIOD_MS);
+		
+			 // Adjust the delay as necessary
 		}
 	}
 
@@ -538,20 +562,9 @@ void app_main(void)
     // Assuming you receive a command to capture and send an image
     // send_image_to_server("/spiffs/capture.jpeg");
 
-	// esp_err_t ret= ESP_OK;
-    uint16_t distance;
+	
 
-    // ret = laser_sensor_init();
-    // if (ret != ESP_OK) {
-    //     ESP_LOGE(TAG, "Failed to initialize laser sensor");
-    //     return;
-    // }
-
-    // ret = laser_sensor_start_ranging();
-    // if (ret != ESP_OK) {
-    //     ESP_LOGE(TAG, "Failed to start ranging");
-    //     return;
-    // }
+    
 
 	// while (1) {
     //     ret = laser_sensor_get_distance(&distance);

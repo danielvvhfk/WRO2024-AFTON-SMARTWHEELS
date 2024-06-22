@@ -529,6 +529,16 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
+  include("/Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/build/esp-idf/st_vl53l4cd/cmake_install.cmake")
+endif()
+
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
+  include("/Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/build/esp-idf/cJSON/cmake_install.cmake")
+endif()
+
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
   include("/Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/build/esp-idf/esp-dl/cmake_install.cmake")
 endif()
 

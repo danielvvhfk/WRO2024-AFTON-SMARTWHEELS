@@ -8,3 +8,4 @@ dependencies:
       - if: "idf_version >=5.0"
   espressif/esp-dl:
     version: ">=1.0.0"  # Use the appropriate version based on the latest available version
+  

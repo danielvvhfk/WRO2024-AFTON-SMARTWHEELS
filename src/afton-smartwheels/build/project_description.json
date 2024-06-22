@@ -1,7 +1,7 @@
 {
     "version":            "1.1",
     "project_name":       "afton-smartwheels",
-    "project_version":    "134de4c-dirty",
+    "project_version":    "ef455e3-dirty",
     "project_path":       "/Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels",
     "idf_path":           "/Users/danieldenis/esp/esp-idf",
     "build_dir":          "/Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/build",
@@ -25,8 +25,8 @@
         "COMPONENT_KCONFIGS_PROJBUILD" : "/Users/danieldenis/esp/esp-idf/components/bootloader/Kconfig.projbuild;/Users/danieldenis/esp/esp-idf/components/esp_app_format/Kconfig.projbuild;/Users/danieldenis/esp/esp-idf/components/esp_rom/Kconfig.projbuild;/Users/danieldenis/esp/esp-idf/components/esptool_py/Kconfig.projbuild;/Users/danieldenis/esp/esp-idf/components/partition_table/Kconfig.projbuild;/Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/main/Kconfig.projbuild"
     },
     "common_component_reqs": [ "cxx", "newlib", "freertos", "esp_hw_support", "heap", "log", "soc", "hal", "esp_rom", "esp_common", "esp_system", "xtensa" ],
-    "build_components" : [ "app_trace", "app_update", "bootloader", "bootloader_support", "bt", "cmock", "console", "cxx", "driver", "efuse", "esp-dl", "esp-tls", "esp_adc", "esp_app_format", "esp_bootloader_format", "esp_coex", "esp_common", "esp_driver_ana_cmpr", "esp_driver_cam", "esp_driver_dac", "esp_driver_gpio", "esp_driver_gptimer", "esp_driver_i2c", "esp_driver_i2s", "esp_driver_jpeg", "esp_driver_ledc", "esp_driver_mcpwm", "esp_driver_parlio", "esp_driver_pcnt", "esp_driver_rmt", "esp_driver_sdio", "esp_driver_sdm", "esp_driver_sdmmc", "esp_driver_sdspi", "esp_driver_spi", "esp_driver_tsens", "esp_driver_uart", "esp_driver_usb_serial_jtag", "esp_eth", "esp_event", "esp_gdbstub", "esp_hid", "esp_http_client", "esp_http_server", "esp_https_ota", "esp_https_server", "esp_hw_support", "esp_lcd", "esp_local_ctrl", "esp_mm", "esp_netif", "esp_netif_stack", "esp_partition", "esp_phy", "esp_pm", "esp_psram", "esp_ringbuf", "esp_rom", "esp_system", "esp_timer", "esp_vfs_console", "esp_wifi", "espcoredump", "espressif__esp32-camera", "espressif__led_strip", "espressif__mdns", "esptool_py", "fatfs", "freertos", "hal", "heap", "http_parser", "idf_test", "ieee802154", "json", "log", "lwip", "main", "mbedtls", "mqtt", "newlib", "nvs_flash", "nvs_sec_provider", "openthread", "partition_table", "perfmon", "protobuf-c", "protocomm", "pthread", "sdmmc", "soc", "spi_flash", "spiffs", "tcp_transport", "touch_element", "ulp", "unity", "usb", "vfs", "wear_levelling", "wifi_provisioning", "wpa_supplicant", "xtensa", "" ],
-    "build_component_paths" : [ "/Users/danieldenis/esp/esp-idf/components/app_trace", "/Users/danieldenis/esp/esp-idf/components/app_update", "/Users/danieldenis/esp/esp-idf/components/bootloader", "/Users/danieldenis/esp/esp-idf/components/bootloader_support", "/Users/danieldenis/esp/esp-idf/components/bt", "/Users/danieldenis/esp/esp-idf/components/cmock", "/Users/danieldenis/esp/esp-idf/components/console", "/Users/danieldenis/esp/esp-idf/components/cxx", "/Users/danieldenis/esp/esp-idf/components/driver", "/Users/danieldenis/esp/esp-idf/components/efuse", "/Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/components/esp-dl", "/Users/danieldenis/esp/esp-idf/components/esp-tls", "/Users/danieldenis/esp/esp-idf/components/esp_adc", "/Users/danieldenis/esp/esp-idf/components/esp_app_format", "/Users/danieldenis/esp/esp-idf/components/esp_bootloader_format", "/Users/danieldenis/esp/esp-idf/components/esp_coex", "/Users/danieldenis/esp/esp-idf/components/esp_common", "/Users/danieldenis/esp/esp-idf/components/esp_driver_ana_cmpr", "/Users/danieldenis/esp/esp-idf/components/esp_driver_cam", "/Users/danieldenis/esp/esp-idf/components/esp_driver_dac", "/Users/danieldenis/esp/esp-idf/components/esp_driver_gpio", "/Users/danieldenis/esp/esp-idf/components/esp_driver_gptimer", "/Users/danieldenis/esp/esp-idf/components/esp_driver_i2c", "/Users/danieldenis/esp/esp-idf/components/esp_driver_i2s", "/Users/danieldenis/esp/esp-idf/components/esp_driver_jpeg", "/Users/danieldenis/esp/esp-idf/components/esp_driver_ledc", "/Users/danieldenis/esp/esp-idf/components/esp_driver_mcpwm", "/Users/danieldenis/esp/esp-idf/components/esp_driver_parlio", "/Users/danieldenis/esp/esp-idf/components/esp_driver_pcnt", "/Users/danieldenis/esp/esp-idf/components/esp_driver_rmt", "/Users/danieldenis/esp/esp-idf/components/esp_driver_sdio", "/Users/danieldenis/esp/esp-idf/components/esp_driver_sdm", "/Users/danieldenis/esp/esp-idf/components/esp_driver_sdmmc", "/Users/danieldenis/esp/esp-idf/components/esp_driver_sdspi", "/Users/danieldenis/esp/esp-idf/components/esp_driver_spi", "/Users/danieldenis/esp/esp-idf/components/esp_driver_tsens", "/Users/danieldenis/esp/esp-idf/components/esp_driver_uart", "/Users/danieldenis/esp/esp-idf/components/esp_driver_usb_serial_jtag", "/Users/danieldenis/esp/esp-idf/components/esp_eth", "/Users/danieldenis/esp/esp-idf/components/esp_event", "/Users/danieldenis/esp/esp-idf/components/esp_gdbstub", "/Users/danieldenis/esp/esp-idf/components/esp_hid", "/Users/danieldenis/esp/esp-idf/components/esp_http_client", "/Users/danieldenis/esp/esp-idf/components/esp_http_server", "/Users/danieldenis/esp/esp-idf/components/esp_https_ota", "/Users/danieldenis/esp/esp-idf/components/esp_https_server", "/Users/danieldenis/esp/esp-idf/components/esp_hw_support", "/Users/danieldenis/esp/esp-idf/components/esp_lcd", "/Users/danieldenis/esp/esp-idf/components/esp_local_ctrl", "/Users/danieldenis/esp/esp-idf/components/esp_mm", "/Users/danieldenis/esp/esp-idf/components/esp_netif", "/Users/danieldenis/esp/esp-idf/components/esp_netif_stack", "/Users/danieldenis/esp/esp-idf/components/esp_partition", "/Users/danieldenis/esp/esp-idf/components/esp_phy", "/Users/danieldenis/esp/esp-idf/components/esp_pm", "/Users/danieldenis/esp/esp-idf/components/esp_psram", "/Users/danieldenis/esp/esp-idf/components/esp_ringbuf", "/Users/danieldenis/esp/esp-idf/components/esp_rom", "/Users/danieldenis/esp/esp-idf/components/esp_system", "/Users/danieldenis/esp/esp-idf/components/esp_timer", "/Users/danieldenis/esp/esp-idf/components/esp_vfs_console", "/Users/danieldenis/esp/esp-idf/components/esp_wifi", "/Users/danieldenis/esp/esp-idf/components/espcoredump", "/Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/managed_components/espressif__esp32-camera", "/Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/managed_components/espressif__led_strip", "/Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/managed_components/espressif__mdns", "/Users/danieldenis/esp/esp-idf/components/esptool_py", "/Users/danieldenis/esp/esp-idf/components/fatfs", "/Users/danieldenis/esp/esp-idf/components/freertos", "/Users/danieldenis/esp/esp-idf/components/hal", "/Users/danieldenis/esp/esp-idf/components/heap", "/Users/danieldenis/esp/esp-idf/components/http_parser", "/Users/danieldenis/esp/esp-idf/components/idf_test", "/Users/danieldenis/esp/esp-idf/components/ieee802154", "/Users/danieldenis/esp/esp-idf/components/json", "/Users/danieldenis/esp/esp-idf/components/log", "/Users/danieldenis/esp/esp-idf/components/lwip", "/Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/main", "/Users/danieldenis/esp/esp-idf/components/mbedtls", "/Users/danieldenis/esp/esp-idf/components/mqtt", "/Users/danieldenis/esp/esp-idf/components/newlib", "/Users/danieldenis/esp/esp-idf/components/nvs_flash", "/Users/danieldenis/esp/esp-idf/components/nvs_sec_provider", "/Users/danieldenis/esp/esp-idf/components/openthread", "/Users/danieldenis/esp/esp-idf/components/partition_table", "/Users/danieldenis/esp/esp-idf/components/perfmon", "/Users/danieldenis/esp/esp-idf/components/protobuf-c", "/Users/danieldenis/esp/esp-idf/components/protocomm", "/Users/danieldenis/esp/esp-idf/components/pthread", "/Users/danieldenis/esp/esp-idf/components/sdmmc", "/Users/danieldenis/esp/esp-idf/components/soc", "/Users/danieldenis/esp/esp-idf/components/spi_flash", "/Users/danieldenis/esp/esp-idf/components/spiffs", "/Users/danieldenis/esp/esp-idf/components/tcp_transport", "/Users/danieldenis/esp/esp-idf/components/touch_element", "/Users/danieldenis/esp/esp-idf/components/ulp", "/Users/danieldenis/esp/esp-idf/components/unity", "/Users/danieldenis/esp/esp-idf/components/usb", "/Users/danieldenis/esp/esp-idf/components/vfs", "/Users/danieldenis/esp/esp-idf/components/wear_levelling", "/Users/danieldenis/esp/esp-idf/components/wifi_provisioning", "/Users/danieldenis/esp/esp-idf/components/wpa_supplicant", "/Users/danieldenis/esp/esp-idf/components/xtensa", "" ],
+    "build_components" : [ "app_trace", "app_update", "bootloader", "bootloader_support", "bt", "cJSON", "cmock", "console", "cxx", "driver", "efuse", "esp-dl", "esp-tls", "esp_adc", "esp_app_format", "esp_bootloader_format", "esp_coex", "esp_common", "esp_driver_ana_cmpr", "esp_driver_cam", "esp_driver_dac", "esp_driver_gpio", "esp_driver_gptimer", "esp_driver_i2c", "esp_driver_i2s", "esp_driver_jpeg", "esp_driver_ledc", "esp_driver_mcpwm", "esp_driver_parlio", "esp_driver_pcnt", "esp_driver_rmt", "esp_driver_sdio", "esp_driver_sdm", "esp_driver_sdmmc", "esp_driver_sdspi", "esp_driver_spi", "esp_driver_tsens", "esp_driver_uart", "esp_driver_usb_serial_jtag", "esp_eth", "esp_event", "esp_gdbstub", "esp_hid", "esp_http_client", "esp_http_server", "esp_https_ota", "esp_https_server", "esp_hw_support", "esp_lcd", "esp_local_ctrl", "esp_mm", "esp_netif", "esp_netif_stack", "esp_partition", "esp_phy", "esp_pm", "esp_psram", "esp_ringbuf", "esp_rom", "esp_system", "esp_timer", "esp_vfs_console", "esp_wifi", "espcoredump", "espressif__esp32-camera", "espressif__led_strip", "espressif__mdns", "esptool_py", "fatfs", "freertos", "hal", "heap", "http_parser", "idf_test", "ieee802154", "json", "log", "lwip", "main", "mbedtls", "mqtt", "newlib", "nvs_flash", "nvs_sec_provider", "openthread", "partition_table", "perfmon", "protobuf-c", "protocomm", "pthread", "sdmmc", "soc", "spi_flash", "spiffs", "st_vl53l4cd", "tcp_transport", "touch_element", "ulp", "unity", "usb", "vfs", "wear_levelling", "wifi_provisioning", "wpa_supplicant", "xtensa", "" ],
+    "build_component_paths" : [ "/Users/danieldenis/esp/esp-idf/components/app_trace", "/Users/danieldenis/esp/esp-idf/components/app_update", "/Users/danieldenis/esp/esp-idf/components/bootloader", "/Users/danieldenis/esp/esp-idf/components/bootloader_support", "/Users/danieldenis/esp/esp-idf/components/bt", "/Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/components/cJSON", "/Users/danieldenis/esp/esp-idf/components/cmock", "/Users/danieldenis/esp/esp-idf/components/console", "/Users/danieldenis/esp/esp-idf/components/cxx", "/Users/danieldenis/esp/esp-idf/components/driver", "/Users/danieldenis/esp/esp-idf/components/efuse", "/Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/components/esp-dl", "/Users/danieldenis/esp/esp-idf/components/esp-tls", "/Users/danieldenis/esp/esp-idf/components/esp_adc", "/Users/danieldenis/esp/esp-idf/components/esp_app_format", "/Users/danieldenis/esp/esp-idf/components/esp_bootloader_format", "/Users/danieldenis/esp/esp-idf/components/esp_coex", "/Users/danieldenis/esp/esp-idf/components/esp_common", "/Users/danieldenis/esp/esp-idf/components/esp_driver_ana_cmpr", "/Users/danieldenis/esp/esp-idf/components/esp_driver_cam", "/Users/danieldenis/esp/esp-idf/components/esp_driver_dac", "/Users/danieldenis/esp/esp-idf/components/esp_driver_gpio", "/Users/danieldenis/esp/esp-idf/components/esp_driver_gptimer", "/Users/danieldenis/esp/esp-idf/components/esp_driver_i2c", "/Users/danieldenis/esp/esp-idf/components/esp_driver_i2s", "/Users/danieldenis/esp/esp-idf/components/esp_driver_jpeg", "/Users/danieldenis/esp/esp-idf/components/esp_driver_ledc", "/Users/danieldenis/esp/esp-idf/components/esp_driver_mcpwm", "/Users/danieldenis/esp/esp-idf/components/esp_driver_parlio", "/Users/danieldenis/esp/esp-idf/components/esp_driver_pcnt", "/Users/danieldenis/esp/esp-idf/components/esp_driver_rmt", "/Users/danieldenis/esp/esp-idf/components/esp_driver_sdio", "/Users/danieldenis/esp/esp-idf/components/esp_driver_sdm", "/Users/danieldenis/esp/esp-idf/components/esp_driver_sdmmc", "/Users/danieldenis/esp/esp-idf/components/esp_driver_sdspi", "/Users/danieldenis/esp/esp-idf/components/esp_driver_spi", "/Users/danieldenis/esp/esp-idf/components/esp_driver_tsens", "/Users/danieldenis/esp/esp-idf/components/esp_driver_uart", "/Users/danieldenis/esp/esp-idf/components/esp_driver_usb_serial_jtag", "/Users/danieldenis/esp/esp-idf/components/esp_eth", "/Users/danieldenis/esp/esp-idf/components/esp_event", "/Users/danieldenis/esp/esp-idf/components/esp_gdbstub", "/Users/danieldenis/esp/esp-idf/components/esp_hid", "/Users/danieldenis/esp/esp-idf/components/esp_http_client", "/Users/danieldenis/esp/esp-idf/components/esp_http_server", "/Users/danieldenis/esp/esp-idf/components/esp_https_ota", "/Users/danieldenis/esp/esp-idf/components/esp_https_server", "/Users/danieldenis/esp/esp-idf/components/esp_hw_support", "/Users/danieldenis/esp/esp-idf/components/esp_lcd", "/Users/danieldenis/esp/esp-idf/components/esp_local_ctrl", "/Users/danieldenis/esp/esp-idf/components/esp_mm", "/Users/danieldenis/esp/esp-idf/components/esp_netif", "/Users/danieldenis/esp/esp-idf/components/esp_netif_stack", "/Users/danieldenis/esp/esp-idf/components/esp_partition", "/Users/danieldenis/esp/esp-idf/components/esp_phy", "/Users/danieldenis/esp/esp-idf/components/esp_pm", "/Users/danieldenis/esp/esp-idf/components/esp_psram", "/Users/danieldenis/esp/esp-idf/components/esp_ringbuf", "/Users/danieldenis/esp/esp-idf/components/esp_rom", "/Users/danieldenis/esp/esp-idf/components/esp_system", "/Users/danieldenis/esp/esp-idf/components/esp_timer", "/Users/danieldenis/esp/esp-idf/components/esp_vfs_console", "/Users/danieldenis/esp/esp-idf/components/esp_wifi", "/Users/danieldenis/esp/esp-idf/components/espcoredump", "/Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/managed_components/espressif__esp32-camera", "/Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/managed_components/espressif__led_strip", "/Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/managed_components/espressif__mdns", "/Users/danieldenis/esp/esp-idf/components/esptool_py", "/Users/danieldenis/esp/esp-idf/components/fatfs", "/Users/danieldenis/esp/esp-idf/components/freertos", "/Users/danieldenis/esp/esp-idf/components/hal", "/Users/danieldenis/esp/esp-idf/components/heap", "/Users/danieldenis/esp/esp-idf/components/http_parser", "/Users/danieldenis/esp/esp-idf/components/idf_test", "/Users/danieldenis/esp/esp-idf/components/ieee802154", "/Users/danieldenis/esp/esp-idf/components/json", "/Users/danieldenis/esp/esp-idf/components/log", "/Users/danieldenis/esp/esp-idf/components/lwip", "/Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/main", "/Users/danieldenis/esp/esp-idf/components/mbedtls", "/Users/danieldenis/esp/esp-idf/components/mqtt", "/Users/danieldenis/esp/esp-idf/components/newlib", "/Users/danieldenis/esp/esp-idf/components/nvs_flash", "/Users/danieldenis/esp/esp-idf/components/nvs_sec_provider", "/Users/danieldenis/esp/esp-idf/components/openthread", "/Users/danieldenis/esp/esp-idf/components/partition_table", "/Users/danieldenis/esp/esp-idf/components/perfmon", "/Users/danieldenis/esp/esp-idf/components/protobuf-c", "/Users/danieldenis/esp/esp-idf/components/protocomm", "/Users/danieldenis/esp/esp-idf/components/pthread", "/Users/danieldenis/esp/esp-idf/components/sdmmc", "/Users/danieldenis/esp/esp-idf/components/soc", "/Users/danieldenis/esp/esp-idf/components/spi_flash", "/Users/danieldenis/esp/esp-idf/components/spiffs", "/Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/components/st_vl53l4cd", "/Users/danieldenis/esp/esp-idf/components/tcp_transport", "/Users/danieldenis/esp/esp-idf/components/touch_element", "/Users/danieldenis/esp/esp-idf/components/ulp", "/Users/danieldenis/esp/esp-idf/components/unity", "/Users/danieldenis/esp/esp-idf/components/usb", "/Users/danieldenis/esp/esp-idf/components/vfs", "/Users/danieldenis/esp/esp-idf/components/wear_levelling", "/Users/danieldenis/esp/esp-idf/components/wifi_provisioning", "/Users/danieldenis/esp/esp-idf/components/wpa_supplicant", "/Users/danieldenis/esp/esp-idf/components/xtensa", "" ],
     "build_component_info" : {
         "app_trace": {
             "alias": "idf::app_trace",
@@ -102,6 +102,21 @@
             "file": "",
             "sources": [],
             "include_dirs": []
+        },
+        "cJSON": {
+            "alias": "idf::cJSON",
+            "target": "___idf_cJSON",
+            "prefix": "idf",
+            "dir": "/Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/components/cJSON",
+            "type": "LIBRARY",
+            "lib": "__idf_cJSON",
+            "reqs": [],
+            "priv_reqs": [],
+            "managed_reqs": [],
+            "managed_priv_reqs": [],
+            "file": "/Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/build/esp-idf/cJSON/libcJSON.a",
+            "sources": [ "/Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/components/cJSON/cJSON.c" ],
+            "include_dirs": [ "." ]
         },
         "cmock": {
             "alias": "idf::cmock",
@@ -1190,12 +1205,12 @@
             "dir": "/Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/main",
             "type": "LIBRARY",
             "lib": "__idf_main",
-            "reqs": [],
+            "reqs": [ "st_vl53l4cd", "mbedtls", "esp_http_server", "cJSON", "esp_wifi", "nvs_flash", "spiffs", "esp_http_client" ],
             "priv_reqs": [ "esp-dl", "espressif__esp32-camera", "espressif__led_strip", "espressif__mdns" ],
             "managed_reqs": [],
             "managed_priv_reqs": [ "esp-dl", "espressif__esp32-camera", "espressif__led_strip", "espressif__mdns" ],
             "file": "/Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/build/esp-idf/main/libmain.a",
-            "sources": [ "/Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/main/motor_drv.c", "/Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/main/servo_drv.c", "/Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/main/platform.c", "/Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/main/VL53L4CD_api.c", "/Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/main/laser_sensor.c", "/Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/main/self_driving_main.c", "/Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/main/webserver.c", "/Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/main/image_sender.c", "/Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/main/camera_capture.c" ],
+            "sources": [ "/Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/main/motor_drv.c", "/Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/main/servo_drv.c", "/Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/main/laser_sensor.c", "/Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/main/self_driving_main.c", "/Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/main/webserver.c", "/Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/main/image_sender.c", "/Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/main/camera_capture.c" ],
             "include_dirs": [ "." ]
         },
         "mbedtls": {
@@ -1422,6 +1437,21 @@
             "file": "/Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/build/esp-idf/spiffs/libspiffs.a",
             "sources": [ "/Users/danieldenis/esp/esp-idf/components/spiffs/spiffs_api.c", "/Users/danieldenis/esp/esp-idf/components/spiffs/spiffs/src/spiffs_cache.c", "/Users/danieldenis/esp/esp-idf/components/spiffs/spiffs/src/spiffs_check.c", "/Users/danieldenis/esp/esp-idf/components/spiffs/spiffs/src/spiffs_gc.c", "/Users/danieldenis/esp/esp-idf/components/spiffs/spiffs/src/spiffs_hydrogen.c", "/Users/danieldenis/esp/esp-idf/components/spiffs/spiffs/src/spiffs_nucleus.c", "/Users/danieldenis/esp/esp-idf/components/spiffs/esp_spiffs.c" ],
             "include_dirs": [ "include" ]
+        },
+        "st_vl53l4cd": {
+            "alias": "idf::st_vl53l4cd",
+            "target": "___idf_st_vl53l4cd",
+            "prefix": "idf",
+            "dir": "/Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/components/st_vl53l4cd",
+            "type": "LIBRARY",
+            "lib": "__idf_st_vl53l4cd",
+            "reqs": [ "driver", "freertos" ],
+            "priv_reqs": [],
+            "managed_reqs": [],
+            "managed_priv_reqs": [],
+            "file": "/Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/build/esp-idf/st_vl53l4cd/libst_vl53l4cd.a",
+            "sources": [ "/Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/components/st_vl53l4cd/VL53L4CD_ULD_Driver/VL53L4CD_api.c", "/Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/components/st_vl53l4cd/VL53L4CD_ULD_Driver/VL53L4cd_calibration.c", "/Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/components/st_vl53l4cd/platform/platform.c" ],
+            "include_dirs": [ "VL53L4CD_ULD_Driver", "platform" ]
         },
         "tcp_transport": {
             "alias": "idf::tcp_transport",
@@ -2781,10 +2811,22 @@
             "prefix": "idf",
             "dir": "/Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/main",
             "lib": "__idf_main",
-            "reqs": [],
+            "reqs": [ "st_vl53l4cd", "mbedtls", "esp_http_server", "cJSON", "esp_wifi", "nvs_flash", "spiffs", "esp_http_client" ],
             "priv_reqs": [ "esp-dl", "espressif__esp32-camera", "espressif__led_strip", "espressif__mdns" ],
             "managed_reqs": [],
             "managed_priv_reqs": [ "esp-dl", "espressif__esp32-camera", "espressif__led_strip", "espressif__mdns" ],
+            "include_dirs": [ "." ]
+        },
+        "cJSON": {
+            "alias": "idf::cJSON",
+            "target": "___idf_cJSON",
+            "prefix": "idf",
+            "dir": "/Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/components/cJSON",
+            "lib": "__idf_cJSON",
+            "reqs": [],
+            "priv_reqs": [],
+            "managed_reqs": [],
+            "managed_priv_reqs": [],
             "include_dirs": [ "." ]
         },
         "esp-dl": {
@@ -2799,6 +2841,18 @@
             "managed_priv_reqs": [],
             "include_dirs": [ "include/", "include/tool", "include/typedef", "include/image", "include/math", "include/nn", "include/tvm", "include/layer", "include/detect", "include/model_zoo" ]
         },
+        "st_vl53l4cd": {
+            "alias": "idf::st_vl53l4cd",
+            "target": "___idf_st_vl53l4cd",
+            "prefix": "idf",
+            "dir": "/Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/components/st_vl53l4cd",
+            "lib": "__idf_st_vl53l4cd",
+            "reqs": [ "driver", "freertos" ],
+            "priv_reqs": [],
+            "managed_reqs": [],
+            "managed_priv_reqs": [],
+            "include_dirs": [ "VL53L4CD_ULD_Driver", "platform" ]
+        },
         "espressif__esp32-camera": {
             "alias": "idf::espressif__esp32-camera",
             "target": "___idf_espressif__esp32-camera",
@@ -2811,18 +2865,6 @@
             "managed_priv_reqs": [],
             "include_dirs": [ "driver/include", "conversions/include" ]
         },
-        "espressif__mdns": {
-            "alias": "idf::espressif__mdns",
-            "target": "___idf_espressif__mdns",
-            "prefix": "idf",
-            "dir": "/Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/managed_components/espressif__mdns",
-            "lib": "__idf_espressif__mdns",
-            "reqs": [ "lwip", "console", "esp_netif" ],
-            "priv_reqs": [ "esp_timer", "esp_wifi" ],
-            "managed_reqs": [],
-            "managed_priv_reqs": [],
-            "include_dirs": [ "include" ]
-        },
         "espressif__led_strip": {
             "alias": "idf::espressif__led_strip",
             "target": "___idf_espressif__led_strip",
@@ -2834,6 +2876,18 @@
             "managed_reqs": [],
             "managed_priv_reqs": [],
             "include_dirs": [ "include", "interface" ]
+        },
+        "espressif__mdns": {
+            "alias": "idf::espressif__mdns",
+            "target": "___idf_espressif__mdns",
+            "prefix": "idf",
+            "dir": "/Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/managed_components/espressif__mdns",
+            "lib": "__idf_espressif__mdns",
+            "reqs": [ "lwip", "console", "esp_netif" ],
+            "priv_reqs": [ "esp_timer", "esp_wifi" ],
+            "managed_reqs": [],
+            "managed_priv_reqs": [],
+            "include_dirs": [ "include" ]
         }
     },
     "debug_prefix_map_gdbinit": ""

@@ -82,6 +82,8 @@ $<TARGET_FILE:__idf_spiffs>
 $<TARGET_FILE:__idf_touch_element>
 $<TARGET_FILE:__idf_usb>
 $<TARGET_FILE:__idf_wifi_provisioning>
+$<TARGET_FILE:__idf_st_vl53l4cd>
+$<TARGET_FILE:__idf_cJSON>
 $<TARGET_FILE:__idf_espressif__esp32-camera>
 $<TARGET_FILE:__idf_espressif__led_strip>
 $<TARGET_FILE:__idf_espressif__mdns>
