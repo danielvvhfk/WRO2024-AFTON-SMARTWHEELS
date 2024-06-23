@@ -42,7 +42,7 @@
 #include "camera_pin.h"
 #include "camera_capture.h"
 // #include "modelAi.h"
-#include "motor_drv.h"
+#include "motor_drv.h""
 
 
 // WiFi credentials
@@ -383,6 +383,8 @@ void app_main(void)
     // io_conf.pull_up_en = GPIO_PULLUP_DISABLE;
     // gpio_config(&io_conf);
 
+	// init motor
+	motor_driver_init();
 
 	// Configure the start switch GPIO
     configure_start_switch();
@@ -437,6 +439,7 @@ void app_main(void)
         ESP_LOGE(TAG, "Failed to initialize servo driver");
     }
 
+<<<<<<< HEAD
 	err = motor_driver_init();
     if (err != ESP_OK) {
         ESP_LOGE("APP_MAIN", "Motor driver initialization failed");
@@ -464,12 +467,25 @@ void app_main(void)
 	ESP_LOGI(TAG, "Moving steering %d", steering);
 	   
 
+=======
+	
+>>>>>>> parent of ef455e3 (fix some issues)
     // Wait for the start button to be pressed
     printf("Waiting for start button to be pressed...\n");
     wait_for_start_button();
     printf("Start button pressed, continuing...\n");
 
+	int press_count = 0;
+    while (press_count < 5) {
+        char imageFileName[256];
+        strcpy(imageFileName, "/spiffs/capture.jpeg");
+        esp_err_t ret = get_image(imageFileName, sizeof(imageFileName));
+        if (ret != ESP_OK) {
+            ESP_LOGE(TAG, "Failed to capture image");
+            return;
+        }
 
+<<<<<<< HEAD
 
 	int lap_count = 0;
 	int sector_count = 2;
@@ -543,19 +559,24 @@ void app_main(void)
 	// 	// move forward
 	// 	move_forward(90, 70);
 	// 	press_count++;
+=======
+		// move forward
+		move_forward(90, 70);
+		press_count++;
+>>>>>>> parent of ef455e3 (fix some issues)
 		 
 		
 
 
-    //     // // Perform inference
-    //     // float steering_angle = perform_inference(imageFileName);
+        // // Perform inference
+        // float steering_angle = perform_inference(imageFileName);
 
-    //     // // Print the inferred steering angle
-    //     // printf("Inferred Steering Angle: %f\n", steering_angle);
+        // // Print the inferred steering angle
+        // printf("Inferred Steering Angle: %f\n", steering_angle);
 
-    //     // Add a delay to avoid flooding the log
-    //     vTaskDelay(1000 / portTICK_PERIOD_MS);
-    // }	// Create a task to test the servo
+        // Add a delay to avoid flooding the log
+        vTaskDelay(1000 / portTICK_PERIOD_MS);
+    }	// Create a task to test the servo
     // xTaskCreate(servo_test_task, "servo_test_task", SERVO_TEST_TASK_STACK_SIZE, NULL, SERVO_TEST_TASK_PRIORITY, NULL);
    
 	// Call move_stop function after button has been pressed 10 times
