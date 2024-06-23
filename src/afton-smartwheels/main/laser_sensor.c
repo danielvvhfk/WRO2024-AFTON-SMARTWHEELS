@@ -1,9 +1,11 @@
 #include "laser_sensor.h"
 #include "driver/i2c.h"
+#include "driver/i2c_master.h"
+#include "driver/i2c_types.h"
 #include "driver/gpio.h"
 #include "VL53L4CD_api.h"
 #include "platform.h"
-#include "esp_log.h"  // Add this include for ESP_LOGE
+#include "esp_log.h"
 
 static const char *TAG = "VL53L4CD";
 
@@ -19,9 +21,8 @@ static esp_err_t i2c_master_init(void) {
         .master.clk_speed = I2C0_MASTER_FREQ_HZ,
     };
     i2c_param_config(I2C0_MASTER_NUM, &conf);
-    // return i2c_driver_install(I2C1_MASTER_NUM, conf.mode, 0, 0, 0);
     ESP_LOGI(TAG, "I2C driver install");
-    esp_err_t ret = i2c_driver_install(I2C_NUM_0, conf.mode, 0, 0, 0);
+    esp_err_t ret = i2c_driver_install(I2C0_MASTER_NUM, conf.mode, 0, 0, 0);
     if (ret != ESP_OK) {
         ESP_LOGE(TAG, "I2C driver install error: %s", esp_err_to_name(ret));
     }
@@ -33,6 +34,7 @@ esp_err_t laser_sensor_init(void) {
     esp_err_t ret;
     VL53L4CD_Error status;
     uint16_t sensor_id;
+    VL53L4CD_Dev_t dev = { .I2cDevAddr = VL53L4CD_I2C_ADDRESS };  // Initialize device structure
 
     ESP_LOGI(TAG, "Initializing I2C...");
     ret = i2c_master_init();
@@ -41,41 +43,31 @@ esp_err_t laser_sensor_init(void) {
         return ret;
     }
 
-   
-    // Initialize the XSHUT pin
-    ESP_LOGI(TAG, " Initialize the XSHUT pin");
-    gpio_reset_pin(XSHUT_PIN);  // Reset the pin before setting direction
+    ESP_LOGI(TAG, "Initialize the XSHUT pin");
+    gpio_reset_pin(XSHUT_PIN);
     ret = gpio_set_direction(XSHUT_PIN, GPIO_MODE_OUTPUT);
     if (ret != ESP_OK) {
         ESP_LOGE(TAG, "Failed to set GPIO direction: %s", esp_err_to_name(ret));
         return ret;
     }
 
-    // Power cycle the sensor
     ESP_LOGI(TAG, "Power cycle the sensor");
     gpio_set_level(XSHUT_PIN, 0);
-    // vTaskDelay(100 / portTICK_PERIOD_MS);
-    // gpio_set_level(XSHUT_PIN, 1);
-    // vTaskDelay(100 / portTICK_PERIOD_MS);
-    vTaskDelay(pdMS_TO_TICKS(100));  // Convert 100ms to ticks
+    vTaskDelay(pdMS_TO_TICKS(100));
     gpio_set_level(XSHUT_PIN, 1);
-    vTaskDelay(pdMS_TO_TICKS(100));  // Convert 100ms to ticks
-
+    vTaskDelay(pdMS_TO_TICKS(100));
 
     ESP_LOGI(TAG, "VL53L4CD- tryGetSensorId");
 
-    // Check if sensor is connected
-    status = VL53L4CD_GetSensorId(VL53L4CD_I2C_ADDRESS, &sensor_id);
+    status = VL53L4CD_GetSensorId(&dev, &sensor_id);
     if (status || (sensor_id != 0xEBAA)) {
         ESP_LOGE(TAG, "VL53L4CD not detected at requested address with ret status: %d", status);
         ESP_LOGE(TAG, "VL53L4CD sensorid: %d", sensor_id);
         return ESP_FAIL;
     }
 
-    // Initialize the sensor
     ESP_LOGI(TAG, "Initialize the sensor VL53L4CD");
-    // VL53L4CD_Error status;
-    status = VL53L4CD_SensorInit(VL53L4CD_I2C_ADDRESS);
+    status = VL53L4CD_SensorInit(&dev);
     if (status != VL53L4CD_ERROR_NONE) {
         ESP_LOGE(TAG, "Sensor init failed with status: %d", status);
         return ESP_FAIL;
@@ -84,6 +76,7 @@ esp_err_t laser_sensor_init(void) {
     ESP_LOGI(TAG, "VL53L4CD ULD ready!");
     return ESP_OK;
 }
+
 
 // Start Ranging
 esp_err_t laser_sensor_start_ranging(void) {

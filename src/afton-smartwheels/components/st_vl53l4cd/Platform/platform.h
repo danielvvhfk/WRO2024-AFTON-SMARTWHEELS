@@ -64,11 +64,16 @@
 
 #define VL53L4CD_DEFAULT_TIMEOUT 50
 
-typedef struct {
-	uint32_t dummy;
-} VL53L1_Dev_t;
+// typedef struct {
+// 	uint32_t dummy;
+// } VL53L1_Dev_t;
 
-typedef VL53L1_Dev_t *VL53L1_DEV;
+typedef struct {
+    uint8_t I2cDevAddr;
+} VL53L4CD_Dev_t;
+
+
+// typedef VL53L1_Dev_t *VL53L1_DEV;
 
 /**
  * @brief Placeholder value to signal that the ESP new I2C driver abstraction is being honored.
@@ -109,44 +114,12 @@ typedef uint8_t VL53L4CD_Error;
 //#define VL53L4CD_I2C_FAST_MODE_PLUS
 
 
-/**
- * @brief Read 32 bits through I2C.
- */
-
-uint8_t VL53L4CD_RdDWord(Dev_t dev, uint16_t registerAddr, uint32_t *value);
-/**
- * @brief Read 16 bits through I2C.
- */
-
-uint8_t VL53L4CD_RdWord(Dev_t dev, uint16_t registerAddr, uint16_t *value);
-
-/**
- * @brief Read 8 bits through I2C.
- */
-
-uint8_t VL53L4CD_RdByte(Dev_t dev, uint16_t registerAddr, uint8_t *value);
-
-/**
- * @brief Write 8 bits through I2C.
- */
-
-uint8_t VL53L4CD_WrByte(Dev_t dev, uint16_t registerAddr, uint8_t value);
-
-/**
- * @brief Write 16 bits through I2C.
- */
-
-uint8_t VL53L4CD_WrWord(Dev_t dev, uint16_t RegisterAdress, uint16_t value);
-
-/**
- * @brief Write 32 bits through I2C.
- */
-
-uint8_t VL53L4CD_WrDWord(Dev_t dev, uint16_t RegisterAdress, uint32_t value);
-
-/**
- * @brief Wait during N milliseconds.
- */
+int8_t VL53L4CD_RdDWord(VL53L4CD_Dev_t *pdev, uint16_t index, uint32_t *pdata);
+int8_t VL53L4CD_WrByte(VL53L4CD_Dev_t *pdev, uint16_t index, uint8_t data);
+uint8_t VL53L4CD_RdWord(VL53L4CD_Dev_t *pdev, uint16_t index, uint16_t *pdata);
+uint8_t VL53L4CD_RdByte(VL53L4CD_Dev_t *pdev, uint16_t index, uint8_t *pdata);
+uint8_t VL53L4CD_WrWord(VL53L4CD_Dev_t *pdev, uint16_t index, uint16_t data);
+uint8_t VL53L4CD_WrDWord(VL53L4CD_Dev_t *pdev, uint16_t index, uint32_t data);
 
 uint8_t WaitMs(Dev_t dev, uint32_t TimeMs);
 

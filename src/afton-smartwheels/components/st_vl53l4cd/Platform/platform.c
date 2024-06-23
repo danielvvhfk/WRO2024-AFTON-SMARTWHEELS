@@ -1,185 +1,129 @@
-/*
- Copyright (c) 2021, STMicroelectronics - All Rights Reserved
-
- This file : part of VL53L4CD Ultra Lite Driver and : dual licensed, either
- 'STMicroelectronics Proprietary license'
- or 'BSD 3-clause "New" or "Revised" License' , at your option.
-
-*******************************************************************************
-
- 'STMicroelectronics Proprietary license'
-
-*******************************************************************************
-
- License terms: STMicroelectronics Proprietary in accordance with licensing
- terms at www.st.com/sla0081
-
- STMicroelectronics confidential
- Reproduction and Communication of this document : strictly prohibited unless
- specifically authorized in writing by STMicroelectronics.
-
-
-*******************************************************************************
-
- Alternatively, VL53L4CD Ultra Lite Driver may be distributed under the terms of
- 'BSD 3-clause "New" or "Revised" License', in which case the following
- provisions apply instead of the ones mentioned above :
-
-*******************************************************************************
-
- License terms: BSD 3-clause "New" or "Revised" License.
-
- Redistribution and use in source and binary forms, with or without
- modification, are permitted provided that the following conditions are met:
-
- 1. Redistributions of source code must retain the above copyright notice, this
- list of conditions and the following disclaimer.
-
- 2. Redistributions in binary form must reproduce the above copyright notice,
- this list of conditions and the following disclaimer in the documentation
- and/or other materials provided with the distribution.
-
- 3. Neither the name of the copyright holder nor the names of its contributors
- may be used to endorse or promote products derived from this software
- without specific prior written permission.
-
- THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*******************************************************************************
-*/
-
-/*******************************************************************************
- * Copyright 2024, LooUQ Incorporated
- * 
- * ESP-IDF platform abstraction and make directives are copyright LooUQ 
- * Incorporated. 
- * 
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the above conditions are met. 
- * Including the inclusion of this notice.
- * 
- * Licensed under the MIT open source license.
-*******************************************************************************/
-
 #include "platform.h"
-
-#include <string.h>
-#include <time.h>
-#include <math.h>
-
-
+#include "driver/i2c.h"
 #include "driver/i2c_master.h"
 #include "driver/i2c_types.h"
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
+
 #include "esp_log.h"
+#include "esp_err.h"
 
+static const char *TAG = "platform";
 
-static i2c_master_dev_handle_t devHndl = NULL;
+#define I2C_MASTER_NUM I2C_NUM_0
+#define I2C_MASTER_SDA_IO        GPIO_NUM_47 // Change to an available GPIO
+#define I2C_MASTER_SCL_IO        GPIO_NUM_48 // Change to an available GPIO
+#define I2C_MASTER_FREQ_HZ 100000
+#define I2C_MASTER_TX_BUF_DISABLE 0
+#define I2C_MASTER_RX_BUF_DISABLE 0
+#define I2C_TIMEOUT_MS 1000
 
-void VL53L4CD_SetDeviceHandle(i2c_master_dev_handle_t esp_DeviceHandle)
-{
-    devHndl = esp_DeviceHandle;
-}
+// // I2C master initialization
+// static esp_err_t i2c_master_init(void) {
+//     i2c_config_t conf = {
+//         .mode = I2C_MODE_MASTER,
+//         .sda_io_num = I2C_MASTER_SDA_IO,
+//         .sda_pullup_en = GPIO_PULLUP_ENABLE,
+//         .scl_io_num = I2C_MASTER_SCL_IO,
+//         .scl_pullup_en = GPIO_PULLUP_ENABLE,
+//         .master.clk_speed = I2C_MASTER_FREQ_HZ,
+//     };
+//     i2c_param_config(I2C_MASTER_NUM, &conf);
+//     return i2c_driver_install(I2C_MASTER_NUM, conf.mode, I2C_MASTER_TX_BUF_DISABLE, I2C_MASTER_RX_BUF_DISABLE, 0);
+// }
 
-
-/* ST platform 
- * --------------------------------------------------------------------------------------------- */
-
-uint8_t VL53L4CD_RdDWord(Dev_t dev, uint16_t RegisterAdress, uint32_t *value)
-{
-    ESP_ERROR_CHECK(devHndl == NULL || dev != TOF_ESP);
-
-    uint8_t indxBffr[2] = {0}; 
-    indxBffr[0] = RegisterAdress >> 8; 
-    indxBffr[1] = RegisterAdress & 0xff;
-
+// Read a dword from the device
+int8_t VL53L4CD_RdDWord(VL53L4CD_Dev_t *pdev, uint16_t index, uint32_t *pdata) {
+    uint8_t indxBffr[2];
+    indxBffr[0] = (index >> 8) & 0xFF;
+    indxBffr[1] = index & 0xFF;
     uint8_t valueBffr[4];
-    ESP_ERROR_CHECK(i2c_master_transmit_receive(devHndl, indxBffr, 2, valueBffr, 4, VL53L4CD_DEFAULT_TIMEOUT));
-    *value = valueBffr[0] << 24 | valueBffr[1] << 16 | valueBffr[2] << 8 | valueBffr[3];
-	return 0;
+    esp_err_t err = i2c_master_write_read_device(I2C_MASTER_NUM, pdev->I2cDevAddr, indxBffr, 2, valueBffr, 4, I2C_TIMEOUT_MS / portTICK_PERIOD_MS);
+    if (err != ESP_OK) {
+        ESP_LOGE(TAG, "I2C Read failed: %s", esp_err_to_name(err));
+        return -1;
+    }
+    *pdata = (valueBffr[0] << 24) | (valueBffr[1] << 16) | (valueBffr[2] << 8) | valueBffr[3];
+    return 0;
 }
 
-
-uint8_t VL53L4CD_RdWord(Dev_t dev, uint16_t RegisterAdress, uint16_t *value)
-{
-    ESP_ERROR_CHECK(devHndl == NULL || dev != TOF_ESP);
-
-    uint8_t indxBffr[2] = {0}; 
-    indxBffr[0] = RegisterAdress >> 8; 
-    indxBffr[1] = RegisterAdress & 0xff;
-
-    uint8_t valueBffr[2];
-    ESP_ERROR_CHECK(i2c_master_transmit_receive(devHndl, indxBffr, 2, valueBffr, 2, VL53L4CD_DEFAULT_TIMEOUT));
-    *value = valueBffr[0] << 8 | valueBffr[1];
-	return 0;
-}
-
-
-uint8_t VL53L4CD_RdByte(Dev_t dev, uint16_t RegisterAdress, uint8_t *value)
-{
-    ESP_ERROR_CHECK(devHndl == NULL || dev != TOF_ESP);
-
-    uint8_t indxBffr[2] = {0}; 
-    indxBffr[0] = RegisterAdress >> 8; 
-    indxBffr[1] = RegisterAdress & 0xff;
-
-    ESP_ERROR_CHECK(i2c_master_transmit_receive(devHndl, indxBffr, 2, value, 1, VL53L4CD_DEFAULT_TIMEOUT));
-	return 0;
-}
-
-uint8_t VL53L4CD_WrByte(Dev_t dev, uint16_t RegisterAdress, uint8_t value)
-{
-    ESP_ERROR_CHECK(devHndl == NULL || dev != TOF_ESP);
-
+// Write a byte to the device
+int8_t VL53L4CD_WrByte(VL53L4CD_Dev_t *pdev, uint16_t index, uint8_t data) {
     uint8_t wrBffr[3];
-    wrBffr[0] = RegisterAdress >> 8; 
-    wrBffr[1] = RegisterAdress & 0xff;
-    wrBffr[2] = value;
+    wrBffr[0] = (index >> 8) & 0xFF;
+    wrBffr[1] = index & 0xFF;
+    wrBffr[2] = data;
+    esp_err_t err = i2c_master_write_to_device(I2C_MASTER_NUM, pdev->I2cDevAddr, wrBffr, 3, I2C_TIMEOUT_MS / portTICK_PERIOD_MS);
+    if (err != ESP_OK) {
+        ESP_LOGE(TAG, "I2C Write failed: %s", esp_err_to_name(err));
+        return -1;
+    }
+    return 0;
+}
 
-    ESP_ERROR_CHECK(i2c_master_transmit(devHndl, wrBffr, 3, VL53L4CD_DEFAULT_TIMEOUT));
-	return 0;
+uint8_t VL53L4CD_RdWord(VL53L4CD_Dev_t *pdev, uint16_t index, uint16_t *pdata) {
+    if (pdev == NULL || pdata == NULL) {
+        ESP_LOGE(TAG, "Invalid argument: pdev or pdata is NULL");
+        return ESP_ERR_INVALID_ARG;
+    }
+
+    uint8_t indxBffr[2];
+    indxBffr[0] = (index >> 8) & 0xFF;
+    indxBffr[1] = index & 0xFF;
+    uint8_t valueBffr[2];
+    esp_err_t err = i2c_master_write_read_device(I2C_MASTER_NUM, pdev->I2cDevAddr, indxBffr, 2, valueBffr, 2, I2C_TIMEOUT_MS / portTICK_PERIOD_MS);
+    if (err != ESP_OK) {
+        ESP_LOGE(TAG, "I2C Read failed: %s", esp_err_to_name(err));
+        return -1;
+    }
+    *pdata = (valueBffr[0] << 8) | valueBffr[1];
+    return 0;
 }
 
 
-uint8_t VL53L4CD_WrWord(Dev_t dev, uint16_t RegisterAdress, uint16_t value)
-{
-    ESP_ERROR_CHECK(devHndl == NULL || dev != TOF_ESP);
+// Read a byte from the device
+uint8_t VL53L4CD_RdByte(VL53L4CD_Dev_t *pdev, uint16_t index, uint8_t *pdata) {
+    uint8_t indxBffr[2];
+    indxBffr[0] = (index >> 8) & 0xFF;
+    indxBffr[1] = index & 0xFF;
+    esp_err_t err = i2c_master_write_read_device(I2C_MASTER_NUM, pdev->I2cDevAddr, indxBffr, 2, pdata, 1, I2C_TIMEOUT_MS / portTICK_PERIOD_MS);
+    if (err != ESP_OK) {
+        ESP_LOGE(TAG, "I2C Read failed: %s", esp_err_to_name(err));
+        return -1;
+    }
+    return 0;
+}
 
+// Write a word to the device
+uint8_t VL53L4CD_WrWord(VL53L4CD_Dev_t *pdev, uint16_t index, uint16_t data) {
     uint8_t wrBffr[4];
-    wrBffr[0] = RegisterAdress >> 8; 
-    wrBffr[1] = RegisterAdress & 0xff;
-    wrBffr[2] = value >> 8; 
-    wrBffr[3] = value & 0xff;
-
-    ESP_ERROR_CHECK(i2c_master_transmit(devHndl, wrBffr, 4, VL53L4CD_DEFAULT_TIMEOUT));
-	return 0;
+    wrBffr[0] = (index >> 8) & 0xFF;
+    wrBffr[1] = index & 0xFF;
+    wrBffr[2] = (data >> 8) & 0xFF;
+    wrBffr[3] = data & 0xFF;
+    esp_err_t err = i2c_master_write_to_device(I2C_MASTER_NUM, pdev->I2cDevAddr, wrBffr, 4, I2C_TIMEOUT_MS / portTICK_PERIOD_MS);
+    if (err != ESP_OK) {
+        ESP_LOGE(TAG, "I2C Write failed: %s", esp_err_to_name(err));
+        return -1;
+    }
+    return 0;
 }
 
-
-uint8_t VL53L4CD_WrDWord(Dev_t dev, uint16_t RegisterAdress, uint32_t value)
-{
-    ESP_ERROR_CHECK(devHndl == NULL || dev != TOF_ESP);
-
+// Write a dword to the device
+uint8_t VL53L4CD_WrDWord(VL53L4CD_Dev_t *pdev, uint16_t index, uint32_t data) {
     uint8_t wrBffr[6];
-    wrBffr[0] = RegisterAdress >> 8; 
-    wrBffr[1] = RegisterAdress & 0xff;
-    wrBffr[2] = value >> 24; 
-    wrBffr[3] = value >> 16;
-    wrBffr[4] = value >> 8; 
-    wrBffr[5] = value & 0xff;
-
-    ESP_ERROR_CHECK(i2c_master_transmit(devHndl, wrBffr, 4, VL53L4CD_DEFAULT_TIMEOUT));
-	return 0;
+    wrBffr[0] = (index >> 8) & 0xFF;
+    wrBffr[1] = index & 0xFF;
+    wrBffr[2] = (data >> 24) & 0xFF;
+    wrBffr[3] = (data >> 16) & 0xFF;
+    wrBffr[4] = (data >> 8) & 0xFF;
+    wrBffr[5] = data & 0xFF;
+    esp_err_t err = i2c_master_write_to_device(I2C_MASTER_NUM, pdev->I2cDevAddr, wrBffr, 6, I2C_TIMEOUT_MS / portTICK_PERIOD_MS);
+    if (err != ESP_OK) {
+        ESP_LOGE(TAG, "I2C Write failed: %s", esp_err_to_name(err));
+        return -1;
+    }
+    return 0;
 }
+
 
 uint8_t WaitMs(Dev_t dev, uint32_t TimeMs)
 {

@@ -443,20 +443,21 @@ void app_main(void)
         return;
     }
 
-	// esp_err_t ret= ESP_OK;
-    // uint16_t distance;
 
-    // ret = laser_sensor_init();
-    // if (ret != ESP_OK) {
-    //     ESP_LOGE(TAG, "Failed to initialize laser sensor");
-    //     return;
-    // }
+    // Initialize the laser sensor
+    ret = laser_sensor_init();
+    if (ret != ESP_OK) {
+        ESP_LOGE(TAG, "Failed to initialize laser sensor");
+        return;
+    }
 
-	// ret = laser_sensor_start_ranging();
-    // if (ret != ESP_OK) {
-    //     ESP_LOGE(TAG, "Failed to start ranging");
-    //     return;
-    // }
+    ret = laser_sensor_start_ranging();
+    if (ret != ESP_OK) {
+        ESP_LOGE(TAG, "Failed to start ranging");
+        return;
+    }
+
+    uint16_t distance;
 
 	int steering=90;
 	set_servo_angle(steering);
@@ -467,6 +468,7 @@ void app_main(void)
     printf("Waiting for start button to be pressed...\n");
     wait_for_start_button();
     printf("Start button pressed, continuing...\n");
+
 
 
 	int lap_count = 0;
@@ -512,12 +514,12 @@ void app_main(void)
 		 
 		}
 
-		// ret = laser_sensor_get_distance(&distance);
-        // if (ret == ESP_OK) {
-        //     ESP_LOGI(TAG, "Distance: %d mm", distance);
-        // } else {
-        //     ESP_LOGE(TAG, "Failed to get distance");
-        // }
+		ret = laser_sensor_get_distance(&distance);
+        if (ret == ESP_OK) {
+            ESP_LOGI(TAG, "Distance: %d mm", distance);
+        } else {
+            ESP_LOGE(TAG, "Failed to get distance");
+        }
 
 		// Add a delay to simulate the vehicle moving through the sector
 		if (sector_count % 2 == 0) {
