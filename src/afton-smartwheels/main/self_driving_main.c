@@ -42,7 +42,7 @@
 #include "camera_pin.h"
 #include "camera_capture.h"
 // #include "modelAi.h"
-#include "motor_drv.h""
+#include "motor_drv.h"
 
 
 // WiFi credentials
@@ -480,7 +480,7 @@ void app_main(void)
     // send_image_to_server("/spiffs/capture.jpeg");
 
 	// esp_err_t ret= ESP_OK;
-    uint16_t distance;
+    // uint16_t distance;
 
     // ret = laser_sensor_init();
     // if (ret != ESP_OK) {
