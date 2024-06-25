@@ -838,3 +838,10 @@
 /Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/build/esp-idf/cJSON/CMakeFiles/install.dir
 /Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/build/esp-idf/cJSON/CMakeFiles/install/local.dir
 /Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/build/esp-idf/cJSON/CMakeFiles/install/strip.dir
+/Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/build/esp-idf/st_vl53l4cd/CMakeFiles/__idf_st_vl53l4cd.dir
+/Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/build/esp-idf/st_vl53l4cd/CMakeFiles/edit_cache.dir
+/Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/build/esp-idf/st_vl53l4cd/CMakeFiles/rebuild_cache.dir
+/Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/build/esp-idf/st_vl53l4cd/CMakeFiles/list_install_components.dir
+/Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/build/esp-idf/st_vl53l4cd/CMakeFiles/install.dir
+/Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/build/esp-idf/st_vl53l4cd/CMakeFiles/install/local.dir
+/Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/build/esp-idf/st_vl53l4cd/CMakeFiles/install/strip.dir

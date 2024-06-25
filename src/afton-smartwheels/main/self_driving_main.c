@@ -57,6 +57,7 @@
 
 #include "image_sender.h"
 #include "laser_sensor.h"
+#include "platform.h"
 
 
 #include "servo_drv.h"  // Include the servo driver header
@@ -425,6 +426,22 @@ void app_main(void)
 		ESP_LOGE(TAG, "Camera Init Failed");
 		while(1) { vTaskDelay(1); }
 	}
+
+	VL53L4CD_Dev_t sensor_dev;
+	    // Initialize the laser sensor
+    ret = laser_sensor_init(&sensor_dev);
+    if (ret != ESP_OK) {
+        ESP_LOGE("APP_MAIN", "Failed to initialize laser sensor");
+        return;
+    }
+
+    ret = laser_sensor_start_ranging(&sensor_dev);
+    if (ret != ESP_OK) {
+        ESP_LOGE("APP_MAIN", "Failed to start ranging");
+        return;
+    }
+
+    uint16_t distance;
 
 	/* Start the server */
 	// start_webserver();
