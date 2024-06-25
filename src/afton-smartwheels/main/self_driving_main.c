@@ -426,7 +426,7 @@ void app_main(void)
 		ESP_LOGE(TAG, "Camera Init Failed");
 		while(1) { vTaskDelay(1); }
 	}
-
+/*
 	VL53L4CD_Dev_t sensor_dev;
 	    // Initialize the laser sensor
     ret = laser_sensor_init(&sensor_dev);
@@ -442,7 +442,7 @@ void app_main(void)
     }
 
     uint16_t distance;
-
+*/
 	/* Start the server */
 	// start_webserver();
 	// Setup the ONNX model
@@ -462,28 +462,58 @@ void app_main(void)
     wait_for_start_button();
     printf("Start button pressed, continuing...\n");
 
-	int press_count = 0;
-    while (press_count < 5) {
-        char imageFileName[256];
-        strcpy(imageFileName, "/spiffs/capture.jpeg");
-        esp_err_t ret = get_image(imageFileName, sizeof(imageFileName));
-        if (ret != ESP_OK) {
-            ESP_LOGE(TAG, "Failed to capture image");
-            return;
-        }
+	int lap_count = 0;
+	int sector_count = 0;
 
-		// move forward
-		move_forward(90, 70);
-		press_count++;
+	while (lap_count < 3) {
+		// Define the steering angle for each sector
+		int steering;
+		if (sector_count % 2 == 0) {
+			// Straight sector
+			steering = 95;
+			move_forward(steering, 68); 
+		}else {
+			// Turn sector
+			steering = 122;
+			move_forward(steering, 70); // Adjust speed as necessary
+			vTaskDelay(840 / portTICK_PERIOD_MS);
+		}
+
+		// Set the steering angle
+		set_servo_angle(steering);
+		ESP_LOGI(TAG, "Moving steering %d", steering);
+
+
+		// Capture image (simulate)
+		char imageFileName[256];
+		strcpy(imageFileName, "/spiffs/capture.jpeg");
+		esp_err_t ret = get_image(imageFileName, sizeof(imageFileName));
+		if (ret != ESP_OK) {
+			ESP_LOGE(TAG, "Failed to capture image");
+			return;
+		}
+
+		// Increase sector count
+		sector_count++;
+
+		// Check if a lap is completed
+		if (sector_count >=8 ) {
+			lap_count++;
+			sector_count = 0; // Reset sector count for next lap
+			printf("Lap %d completed.\n", lap_count);
+
 		 
+		}
+
+
+		// Add a delay to simulate the vehicle moving through the sector
+		if (sector_count % 2 == 0) {
+			// Straight sector
+			vTaskDelay(1875  / portTICK_PERIOD_MS);
 		
-
-
-        // // Perform inference
-        // float steering_angle = perform_inference(imageFileName);
-
-        // // Print the inferred steering angle
-        // printf("Inferred Steering Angle: %f\n", steering_angle);
+			 // Adjust the delay as necessary
+		}
+	
 
         // Add a delay to avoid flooding the log
         vTaskDelay(1000 / portTICK_PERIOD_MS);
@@ -493,45 +523,5 @@ void app_main(void)
 	// Call move_stop function after button has been pressed 10 times
     move_stop();
    
-    // Assuming you receive a command to capture and send an image
-    // send_image_to_server("/spiffs/capture.jpeg");
-
-	// esp_err_t ret= ESP_OK;
-    // uint16_t distance;
-
-    // ret = laser_sensor_init();
-    // if (ret != ESP_OK) {
-    //     ESP_LOGE(TAG, "Failed to initialize laser sensor");
-    //     return;
-    // }
-
-    // ret = laser_sensor_start_ranging();
-    // if (ret != ESP_OK) {
-    //     ESP_LOGE(TAG, "Failed to start ranging");
-    //     return;
-    // }
-
-	// while (1) {
-    //     ret = laser_sensor_get_distance(&distance);
-    //     if (ret == ESP_OK) {
-    //         ESP_LOGI(TAG, "Distance: %d mm", distance);
-    //     } else {
-    //         ESP_LOGE(TAG, "Failed to get distance");
-    //     }
-    //     vTaskDelay(1000 / portTICK_PERIOD_MS);  // Delay 1 second
-    // }
-
-    // ret = laser_sensor_stop_ranging();
-    // if (ret != ESP_OK) {
-    //     ESP_LOGE(TAG, "Failed to stop ranging");
-    // }
-
-	 // while (1) {
-    //     ESP_LOGI(TAG, "Turning the LED %s!", s_led_state == true ? "ON" : "OFF");
-    //     blink_led();
-    //     /* Toggle the LED state */
-    //     s_led_state = !s_led_state;
-
-    //     vTaskDelay(CONFIG_BLINK_PERIOD / portTICK_PERIOD_MS);
-    // }
+  
 }

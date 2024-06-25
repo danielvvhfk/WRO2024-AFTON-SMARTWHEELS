@@ -3,7 +3,7 @@
 
 #include "esp_err.h"
 #include "driver/gpio.h"
-#include "driver/i2c_master.h"
+#include "driver/i2c.h"
 #include "platform.h"
 
 #define I2C0_MASTER_NUM           I2C_NUM_0 // Use I2C1 for the laser sensor

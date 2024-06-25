@@ -5,12 +5,6 @@ dependencies:
       service_url: https://api.components.espressif.com/
       type: service
     version: 1.1.0
-  espressif/esp32-camera:
-    component_hash: a1933162caca04a3a3bb0dca00bb56fcb3c50cd3779ab2f2b03ad8536e9bd0d0
-    source:
-      service_url: https://api.components.espressif.com/
-      type: service
-    version: 2.0.9
   espressif/led_strip:
     component_hash: 67d2744208e9c12d8b1992d21c979396c1726e57cb7e35e7c171c515be20f8ea
     source:
@@ -28,6 +22,6 @@ dependencies:
     source:
       type: idf
     version: 5.3.0
-manifest_hash: 97fa18536ff0eea303cd7bc77f9acb3c73b488895890dae5a2bbd530608bfde6
+manifest_hash: b0445f9799deadfe7279b73e2b1be9fec864a7b200bd08e86d8fa0fa28fbb00e
 target: esp32s3
 version: 1.0.0
