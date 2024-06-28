@@ -22,8 +22,15 @@
         "vl53l4cd_api.h": "c",
         "esp_camera.h": "c",
         "modelai.h": "c",
+<<<<<<< HEAD
         "i2c_types.h": "c",
         "i2c.h": "c"
+=======
+        "platform.h": "c",
+        "laser_sensor.h": "c",
+        "i2c_master.h": "c",
+        "cam_hal.h": "c"
+>>>>>>> 422aa653227b7e71521a406d48b5df2887d1e610
     },
     "C_Cpp.default.compilerPath": "/Users/danieldenis/.espressif/tools/xtensa-esp-elf/esp-13.2.0_20240305/xtensa-esp-elf/bin/xtensa-esp32s3-elf-gcc",
     "terminal.integrated.env.osx": {

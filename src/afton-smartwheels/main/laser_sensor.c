@@ -1,14 +1,26 @@
+<<<<<<< HEAD
 #include "laser_sensor.h"
 #include "driver/i2c.h"
 #include "driver/i2c_master.h"
 #include "driver/i2c_types.h"
+=======
+
+
+>>>>>>> 422aa653227b7e71521a406d48b5df2887d1e610
 #include "driver/gpio.h"
-#include "VL53L4CD_api.h"
-#include "platform.h"
 #include "esp_log.h"
 
-static const char *TAG = "VL53L4CD";
 
+#include "laser_sensor.h"
+#include "platform.h"
+<<<<<<< HEAD
+#include "esp_log.h"
+=======
+#include "VL53L4CD_api.h"
+>>>>>>> 422aa653227b7e71521a406d48b5df2887d1e610
+
+
+<<<<<<< HEAD
 // I2C Master Initialization
 static esp_err_t i2c_master_init(void) {
     ESP_LOGI(TAG, "Initializing I2C...");
@@ -38,11 +50,21 @@ esp_err_t laser_sensor_init(void) {
 
     ESP_LOGI(TAG, "Initializing I2C...");
     ret = i2c_master_init();
+=======
+static const char *TAG = "LASER_SENSOR";
+static VL53L4CD_Dev_t laser_sensor = {0};
+
+esp_err_t laser_sensor_init(VL53L4CD_DEV dev) {
+    // Initialize I2C
+    ESP_LOGI(TAG, "Initialize I2C for sensor");
+     esp_err_t ret = i2c_master_init(&laser_sensor);
+>>>>>>> 422aa653227b7e71521a406d48b5df2887d1e610
     if (ret != ESP_OK) {
         ESP_LOGE(TAG, "Failed to initialize I2C");
         return ret;
     }
 
+<<<<<<< HEAD
     ESP_LOGI(TAG, "Initialize the XSHUT pin");
     gpio_reset_pin(XSHUT_PIN);
     ret = gpio_set_direction(XSHUT_PIN, GPIO_MODE_OUTPUT);
@@ -84,37 +106,63 @@ esp_err_t laser_sensor_start_ranging(void) {
     status = VL53L4CD_StartRanging(VL53L4CD_I2C_ADDRESS);
     if (status != VL53L4CD_ERROR_NONE) {
         ESP_LOGE(TAG, "Start ranging failed with status: %d", status);
+=======
+    sensor_power_cycle();
+
+    dev->I2cDevAddr = VL53L4CD_I2C_ADDRESS; // Ensure this is the correct I2C address
+
+    // Get sensor ID
+    uint16_t sensor_id = 0;
+    ret = VL53L4CD_GetSensorId(&laser_sensor, &sensor_id);
+
+    // Log the values of ret and sensor_id
+    ESP_LOGI(TAG, "ret: 0x%02X, sensor_id: 0x%04X", ret, sensor_id);
+
+    if (ret != ESP_OK || sensor_id != 0xEACC) {
+        ESP_LOGE(TAG, "Failed to get sensor ID or wrong sensor ID");
+        return ret;
+    }
+
+    ESP_LOGI(TAG, "Sensor ID: 0x%X", sensor_id);
+    return ESP_OK;
+}
+
+
+void sensor_power_cycle() {
+    ESP_LOGI(TAG, "Sensor power cycle");
+    gpio_set_direction(XSHUT_PIN, GPIO_MODE_OUTPUT);
+    gpio_set_level(XSHUT_PIN, 0);
+    vTaskDelay(10 / portTICK_PERIOD_MS);  // Power down time
+    gpio_set_level(XSHUT_PIN, 1);
+    vTaskDelay(10 / portTICK_PERIOD_MS);  // Power up time
+}
+
+esp_err_t laser_sensor_start_ranging(VL53L4CD_DEV dev) {
+    int status = VL53L4CD_StartRanging(dev);
+    if (status != 0) {
+        ESP_LOGE(TAG, "Failed to start ranging, status: %d", status);
+>>>>>>> 422aa653227b7e71521a406d48b5df2887d1e610
         return ESP_FAIL;
     }
     return ESP_OK;
 }
 
-// Stop Ranging
-esp_err_t laser_sensor_stop_ranging(void) {
-    VL53L4CD_Error status;
-    status = VL53L4CD_StopRanging(VL53L4CD_I2C_ADDRESS);
-    if (status != VL53L4CD_ERROR_NONE) {
-        ESP_LOGE(TAG, "Stop ranging failed with status: %d", status);
-        return ESP_FAIL;
-    }
-    return ESP_OK;
-}
-
-// Get Distance
-esp_err_t laser_sensor_get_distance(uint16_t *distance) {
+esp_err_t laser_sensor_get_distance(VL53L4CD_DEV dev, uint16_t *distance) {
     VL53L4CD_ResultsData_t results;
-    VL53L4CD_Error status;
-    status = VL53L4CD_CheckForDataReady(VL53L4CD_I2C_ADDRESS, &results.range_status);
-    if (status != VL53L4CD_ERROR_NONE || results.range_status != 0) {
-        ESP_LOGE(TAG, "Data not ready or error: %d", status);
-        return ESP_FAIL;
-    }
-    status = VL53L4CD_GetResult(VL53L4CD_I2C_ADDRESS, &results);
-    if (status != VL53L4CD_ERROR_NONE) {
-        ESP_LOGE(TAG, "Get result failed with status: %d", status);
+    int status = VL53L4CD_GetDistance(dev, &results);
+    if (status != 0) {
+        ESP_LOGE(TAG, "Failed to get distance, status: %d", status);
         return ESP_FAIL;
     }
     *distance = results.distance_mm;
-    VL53L4CD_ClearInterrupt(VL53L4CD_I2C_ADDRESS);
+    return ESP_OK;
+}
+
+esp_err_t laser_sensor_stop_ranging(VL53L4CD_DEV dev) {
+    int status = VL53L4CD_StopRanging(dev);
+    if (status != 0) {
+        ESP_LOGE(TAG, "Failed to stop ranging, status: %d", status);
+        return ESP_FAIL;
+    }
     return ESP_OK;
 }

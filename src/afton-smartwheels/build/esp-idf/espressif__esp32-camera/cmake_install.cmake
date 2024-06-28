@@ -1,4 +1,4 @@
-# Install script for directory: /Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/managed_components/espressif__esp32-camera
+# Install script for directory: /Users/danieldenis/Documents/DanielJose/WRO2024-AFTON-SMARTWHEELS/src/afton-smartwheels/components/espressif__esp32-camera
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
